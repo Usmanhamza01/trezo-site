@@ -3,280 +3,496 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trezo — La trésorerie de votre PME, simplifiée</title>
-<meta name="description" content="Trezo : encaissements, décaissements, salaires, stocks et factures pour PME africaines. Hors ligne ou synchronisé dans le cloud. Essai gratuit 14 jours.">
+<title>Trezo — Le logiciel de trésorerie des PME africaines</title>
+<meta name="description" content="Encaissements, dépenses, salaires, stocks et facturation professionnelle. Sur téléphone, ordinateur et Windows. Essai gratuit 14 jours.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
-<!-- ============================================================
-  À PERSONNALISER AVANT MISE EN LIGNE (cherchez "TODO") :
-  1. TODO-APP    : l'adresse de votre application Trezo Cloud
-  2. TODO-WA     : votre numéro WhatsApp (format international sans +)
-  3. TODO-MAIL   : votre adresse e-mail de contact
-  4. TODO-PRIX   : vos tarifs réels (3 endroits)
-  5. TODO-EXE    : le lien de téléchargement de l'installateur Windows
-============================================================= -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+
+<script>
+/* ================================================================
+   CONFIGURATION DES LIENS — LE SEUL ENDROIT À MODIFIER
+   ================================================================
+   app   : adresse de votre application Trezo Cloud (PWA)
+   exe   : lien direct de l'installateur Windows.
+           Conseil pro : publiez le .exe dans GitHub Releases avec le
+           nom fixe "Trezo-setup.exe" ; le lien .../releases/latest/
+           download/Trezo-setup.exe pointera alors TOUJOURS vers la
+           dernière version, sans jamais retoucher le site.
+   video : ID YouTube de votre démo (les 11 caractères après watch?v=)
+           Laissez "" tant que la vidéo n'est pas prête.
+   wa    : numéro WhatsApp au format international, sans + ni espaces
+   mail  : votre adresse e-mail de contact
+================================================================ */
+window.LIENS = {
+  app:   "https://trezo-cloud.pages.dev/",
+  exe:   "https://trezo-releases.pages.dev/",
+  video: "",
+  wa:    "221XXXXXXXXX",
+  mail:  "contact@votredomaine.com"
+};
+</script>
+
 <style>
 :root{
-  --vert:#0E5A45; --vert-fonce:#0A3D2F; --ambre:#F2B33D; --menthe:#7FC8A9;
-  --sable:#F7F3EC; --creme:#FDFBF7; --encre:#1C2420; --gris:#5E6B64; --ligne:#E4DDD1;
+  --ink:#10201B; --ink-2:#1C2E27; --paper:#FAF9F5; --card:#FFFFFF;
+  --green:#0E5A45; --green-d:#0A3D2F; --mint:#7FC8A9; --amber:#F2B33D;
+  --mut:#5F6B65; --line:#E8E3D9; --line-2:#EFEBE2;
+  --r:18px; --sh:0 24px 60px -20px rgba(16,32,27,.18);
+  --ease:cubic-bezier(.22,.8,.3,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Manrope',system-ui,sans-serif;background:var(--creme);color:var(--encre);line-height:1.6}
-h1,h2,h3{font-family:'Fraunces',Georgia,serif;line-height:1.12;letter-spacing:-.01em}
+body{font-family:'Manrope',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3.serif{font-family:'Fraunces',Georgia,serif;letter-spacing:-.015em;line-height:1.08}
 a{color:inherit}
-img{max-width:100%}
-.wrap{max-width:1100px;margin:0 auto;padding:0 1.3rem}
-section{padding:4.5rem 0}
-.kicker{display:inline-block;font-size:.75rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--vert);background:#E3F2EA;padding:.3rem .8rem;border-radius:99px;margin-bottom:1rem}
-.h2{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:700;margin-bottom:.7rem}
-.lead{color:var(--gris);max-width:56ch}
-.btn{display:inline-block;padding:.9rem 1.6rem;border-radius:12px;font-weight:800;text-decoration:none;font-size:1rem;transition:transform .12s}
+.wrap{max-width:1140px;margin:0 auto;padding:0 1.4rem}
+section{padding:6rem 0}
+@media(max-width:760px){section{padding:4rem 0}}
+.kicker{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-bottom:1.1rem}
+.kicker::before{content:"";width:22px;height:2px;background:var(--amber)}
+.h2{font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:600;margin-bottom:1rem;max-width:22ch}
+.lead{color:var(--mut);font-size:1.08rem;max-width:58ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;padding:.95rem 1.7rem;border-radius:12px;font-weight:800;text-decoration:none;font-size:.98rem;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .2s;cursor:pointer;border:none}
 .btn:hover{transform:translateY(-2px)}
-.btn-p{background:var(--vert);color:#fff}
-.btn-a{background:var(--ambre);color:#3d2a00}
-.btn-o{background:#fff;color:var(--vert);border:1.5px solid var(--vert)}
+.btn:active{transform:translateY(0)}
+.btn-p{background:var(--green);color:#fff;box-shadow:0 10px 24px -10px rgba(14,90,69,.55)}
+.btn-p:hover{background:var(--green-d)}
+.btn-a{background:var(--amber);color:#3a2900;box-shadow:0 10px 24px -10px rgba(242,179,61,.6)}
+.btn-g{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.btn-g:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+.btn-o{background:#fff;color:var(--green);border:1.5px solid var(--green)}
+.btn svg{width:18px;height:18px;flex:none}
+
+/* ---------- Apparition au défilement ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}*{animation:none!important}}
 
 /* ---------- Navigation ---------- */
-nav{position:sticky;top:0;z-index:50;background:rgba(253,251,247,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--ligne)}
-nav .wrap{display:flex;align-items:center;gap:1.4rem;height:66px}
-.logo{display:flex;align-items:center;gap:.55rem;font-weight:800;font-size:1.25rem;text-decoration:none;font-family:'Manrope'}
-.logo svg{width:34px;height:34px;border-radius:9px}
-nav .links{margin-left:auto;display:flex;gap:1.3rem;align-items:center}
-nav .links a{text-decoration:none;font-weight:600;font-size:.92rem;color:var(--gris)}
-nav .links a:hover{color:var(--vert)}
-nav .links .btn{padding:.55rem 1.1rem;font-size:.88rem}
-@media(max-width:760px){nav .links a:not(.btn){display:none}}
+nav{position:sticky;top:0;z-index:60;background:rgba(250,249,245,.85);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border .3s,box-shadow .3s}
+nav.scr{border-bottom-color:var(--line);box-shadow:0 6px 24px -16px rgba(16,32,27,.25)}
+nav .wrap{display:flex;align-items:center;gap:1.6rem;height:72px}
+.logo{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1.3rem;text-decoration:none}
+.logo svg{width:36px;height:36px;border-radius:10px;box-shadow:0 6px 14px -6px rgba(14,90,69,.5)}
+nav .links{margin-left:auto;display:flex;gap:1.6rem;align-items:center}
+nav .links a{text-decoration:none;font-weight:700;font-size:.92rem;color:var(--mut);transition:color .2s}
+nav .links a:hover{color:var(--green)}
+nav .links .btn{padding:.6rem 1.2rem;font-size:.88rem}
+@media(max-width:820px){nav .links a:not(.btn){display:none}}
 
 /* ---------- Héros ---------- */
-.hero{background:var(--vert-fonce);color:#fff;position:relative;overflow:hidden;padding:5rem 0 0}
-.hero .bg-bars{position:absolute;right:-40px;top:-40px;opacity:.08;width:480px;height:480px}
-.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:3rem;align-items:end;position:relative}
-.hero h1{font-size:clamp(2.3rem,5.5vw,3.6rem);font-weight:700;margin-bottom:1.1rem}
-.hero h1 em{font-style:normal;color:var(--ambre)}
-.hero p{color:rgba(255,255,255,.82);font-size:1.1rem;max-width:46ch;margin-bottom:1.8rem}
-.hero .cta{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:2rem}
-.hero .proof{display:flex;gap:1.6rem;padding:1.1rem 0 2.6rem;flex-wrap:wrap}
-.hero .proof div{font-size:.82rem;color:rgba(255,255,255,.75)}
-.hero .proof b{display:block;font-size:1.05rem;color:#fff}
-@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}.hero .phone-col{display:flex;justify-content:center}}
+.hero{background:radial-gradient(1200px 600px at 75% -10%,#14523F 0%,var(--green-d) 55%,#072A20 100%);color:#fff;overflow:hidden;position:relative}
+.hero::after{content:"";position:absolute;inset:0;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect x="24" y="66" width="12" height="26" rx="3" fill="white" opacity=".025"/><rect x="44" y="52" width="12" height="40" rx="3" fill="white" opacity=".025"/><rect x="64" y="36" width="12" height="56" rx="3" fill="white" opacity=".025"/></svg>');pointer-events:none}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:3.5rem;align-items:center;padding-top:5.5rem;padding-bottom:6.5rem}
+@media(max-width:920px){.hero .wrap{grid-template-columns:1fr;padding-top:3.5rem;padding-bottom:4rem}}
+.hero .kicker{color:var(--mint)}
+.hero .kicker::before{background:var(--amber)}
+.hero h1{font-size:clamp(2.5rem,5.6vw,4rem);font-weight:600;margin-bottom:1.3rem}
+.hero h1 em{font-style:italic;color:var(--amber)}
+.hero p.sub{color:rgba(255,255,255,.78);font-size:1.14rem;max-width:48ch;margin-bottom:2.1rem}
+.hero .cta{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:2.2rem}
+.hero .ticks{display:flex;gap:1.6rem;flex-wrap:wrap;font-size:.85rem;color:rgba(255,255,255,.72)}
+.hero .ticks span{display:flex;align-items:center;gap:.45rem}
+.hero .ticks svg{width:15px;height:15px;color:var(--mint)}
 
-/* ---------- Maquette téléphone ---------- */
-.phone{width:290px;background:#111;border-radius:34px;padding:10px;box-shadow:0 30px 60px rgba(0,0,0,.35);transform:rotate(-2deg)}
-.phone .scr{background:var(--sable);border-radius:26px;overflow:hidden;font-size:10.5px}
-.phone .p-head{background:var(--vert);color:#fff;padding:12px 13px;display:flex;align-items:center;gap:7px}
-.phone .p-head .ic{width:22px;height:22px;border-radius:6px;background:#fff;display:grid;place-items:center}
-.phone .p-head b{font-size:11.5px}
-.phone .p-head small{display:block;font-size:8px;opacity:.75}
-.phone .p-hero{margin:10px;background:var(--vert);color:#fff;border-radius:12px;padding:12px;position:relative;overflow:hidden}
-.phone .p-hero .l{font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
-.phone .p-hero .v{font-size:19px;font-weight:800;margin:2px 0}
-.phone .p-hero .bars{position:absolute;right:10px;bottom:0;display:flex;gap:4px;align-items:flex-end;opacity:.4}
-.phone .p-hero .bars i{display:block;width:7px;border-radius:3px 3px 0 0}
-.phone .p-kpis{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 10px 10px}
-.phone .p-kpi{background:#fff;border:1px solid var(--ligne);border-radius:10px;padding:8px}
-.phone .p-kpi .l{font-size:7px;font-weight:700;color:var(--gris);text-transform:uppercase}
-.phone .p-kpi .v{font-size:12px;font-weight:800}
-.phone .p-kpi .v.g{color:var(--vert)} .phone .p-kpi .v.r{color:#C0492F}
-.phone .p-chart{margin:0 10px 10px;background:#fff;border:1px solid var(--ligne);border-radius:10px;padding:9px}
-.phone .p-chart .t{font-size:8.5px;font-weight:800;margin-bottom:6px}
-.phone .p-chart .cols{display:flex;gap:6px;align-items:flex-end;height:56px}
-.phone .p-chart .cols div{flex:1;display:flex;gap:2px;align-items:flex-end}
-.phone .p-chart .cols i{display:block;flex:1;border-radius:2px 2px 0 0}
-.phone .p-nav{display:flex;border-top:1px solid var(--ligne);background:#fff;padding:7px 0 9px}
-.phone .p-nav span{flex:1;text-align:center;font-size:7px;font-weight:700;color:var(--gris)}
-.phone .p-nav span.on{color:var(--vert)}
+/* Maquette bureau + téléphone flottant */
+.stage{position:relative;perspective:1200px}
+.browser{background:#fff;border-radius:16px;box-shadow:var(--sh),0 0 0 1px rgba(255,255,255,.08);overflow:hidden;transform:rotateY(-6deg) rotateX(2deg);font-size:10px;color:var(--ink)}
+.browser .bar{background:#F1EDE4;padding:9px 12px;display:flex;gap:6px;align-items:center}
+.browser .bar i{width:9px;height:9px;border-radius:50%;background:#DDD5C6}
+.browser .bar .url{margin-left:8px;background:#fff;border-radius:6px;padding:3px 10px;font-size:8px;color:var(--mut);flex:1}
+.b-body{display:grid;grid-template-columns:88px 1fr;min-height:270px}
+.b-side{background:var(--green-d);color:rgba(255,255,255,.75);padding:10px 8px;font-size:7.5px;font-weight:700}
+.b-side .it{padding:6px 8px;border-radius:6px;margin-bottom:2px;display:flex;gap:6px;align-items:center}
+.b-side .it.on{background:var(--green);color:#fff}
+.b-side .dot{width:6px;height:6px;border-radius:2px;background:currentColor;opacity:.7}
+.b-main{padding:12px;background:var(--paper)}
+.b-hero{background:var(--green);color:#fff;border-radius:10px;padding:10px 12px;margin-bottom:9px;position:relative;overflow:hidden}
+.b-hero .l{font-size:6.5px;text-transform:uppercase;letter-spacing:.08em;opacity:.8}
+.b-hero .v{font-size:17px;font-weight:800;font-family:'Manrope'}
+.b-hero .bars{position:absolute;right:10px;bottom:0;display:flex;gap:4px;align-items:flex-end;opacity:.4}
+.b-hero .bars i{display:block;width:7px;border-radius:3px 3px 0 0}
+.b-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px}
+.b-kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px}
+.b-kpi .l{font-size:5.8px;font-weight:800;color:var(--mut);text-transform:uppercase}
+.b-kpi .v{font-size:10px;font-weight:800}
+.b-kpi .v.g{color:var(--green)}.b-kpi .v.r{color:#C0492F}
+.b-chart{background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px}
+.b-chart .t{font-size:7px;font-weight:800;margin-bottom:7px}
+.b-cols{display:flex;gap:8px;align-items:flex-end;height:64px}
+.b-cols>div{flex:1;display:flex;gap:3px;align-items:flex-end}
+.b-cols i{display:block;flex:1;border-radius:2.5px 2.5px 0 0;animation:grow 1.2s var(--ease) both}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.b-cols i{transform-origin:bottom}
+.phone2{position:absolute;right:-18px;bottom:-38px;width:150px;background:#101010;border-radius:24px;padding:7px;box-shadow:0 30px 60px -18px rgba(0,0,0,.5);animation:float 7s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+.phone2 .scr{background:var(--paper);border-radius:18px;overflow:hidden;font-size:7px}
+.phone2 .ph{background:var(--green);color:#fff;padding:8px;font-weight:800;font-size:7.5px}
+.phone2 .ph small{display:block;font-weight:600;font-size:5.5px;opacity:.75}
+.phone2 .row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line-2);background:#fff}
+.phone2 .row b{font-size:6.5px}
+.phone2 .row small{display:block;color:var(--mut);font-size:5.2px}
+.phone2 .amt{font-weight:800;font-size:6.5px}
+.phone2 .amt.g{color:var(--green)}.phone2 .amt.r{color:#C0492F}
+@media(max-width:920px){.browser{transform:none}.phone2{right:4px;bottom:-24px}}
 
-/* ---------- Fonctionnalités ---------- */
-.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.1rem;margin-top:2.2rem}
-.feat{background:#fff;border:1px solid var(--ligne);border-radius:16px;padding:1.4rem}
-.feat .ic{width:42px;height:42px;border-radius:12px;background:#E3F2EA;color:var(--vert);display:grid;place-items:center;margin-bottom:.9rem}
-.feat .ic svg{width:22px;height:22px}
-.feat h3{font-size:1.05rem;margin-bottom:.4rem;font-family:'Manrope';font-weight:800}
-.feat p{font-size:.9rem;color:var(--gris)}
+/* ---------- Bande secteurs ---------- */
+.sectors{border-bottom:1px solid var(--line);padding:1.6rem 0;background:#fff}
+.sectors .wrap{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;justify-content:center}
+.sectors .lbl{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-right:.6rem}
+.chip{padding:.45rem 1rem;border:1px solid var(--line);border-radius:99px;font-size:.85rem;font-weight:700;color:var(--ink-2);background:var(--paper)}
 
-/* ---------- Démo / captures ---------- */
-.demo{background:var(--sable)}
-.demo .grid{display:grid;grid-template-columns:1fr 1fr;gap:2.4rem;align-items:center;margin-top:2.4rem}
-@media(max-width:860px){.demo .grid{grid-template-columns:1fr}}
-.inv-mock{background:#fff;border-radius:14px;box-shadow:0 18px 40px rgba(28,36,32,.12);padding:1.5rem;max-width:420px;margin:0 auto;transform:rotate(1.5deg);font-size:.82rem}
-.inv-mock .h{display:flex;gap:.7rem;align-items:center;border-bottom:3px solid var(--vert);padding-bottom:.7rem;margin-bottom:.8rem}
-.inv-mock .h .ic{width:36px;height:36px;border-radius:9px;background:var(--vert);display:grid;place-items:center}
-.inv-mock .h b{color:var(--vert);font-size:1rem}
-.inv-mock .h small{display:block;color:var(--gris);font-weight:700;font-size:.72rem}
-.inv-mock table{width:100%;border-collapse:collapse;margin:.6rem 0}
-.inv-mock th{background:var(--vert);color:#fff;font-size:.68rem;text-align:left;padding:.35rem .5rem}
-.inv-mock td{padding:.35rem .5rem;border-bottom:1px solid var(--ligne);font-size:.76rem}
-.inv-mock .tot{text-align:right;font-weight:800;color:var(--vert)}
-.check{list-style:none;margin-top:1.2rem}
-.check li{padding:.45rem 0 .45rem 2rem;position:relative;font-size:.98rem}
-.check li::before{content:"";position:absolute;left:0;top:.62rem;width:20px;height:20px;border-radius:50%;background:var(--menthe) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%230A3D2F" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg>') center/12px no-repeat}
+/* ---------- Bande chiffres ---------- */
+.stats{background:#fff;border-bottom:1px solid var(--line)}
+.stats .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;padding:2.6rem 1.4rem}
+.stat{text-align:center}
+.stat b{display:block;font-family:'Fraunces';font-size:2.2rem;font-weight:600;color:var(--green)}
+.stat span{font-size:.85rem;color:var(--mut);font-weight:600}
+
+/* ---------- Rangées vedettes ---------- */
+.spot{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;padding:3.4rem 0}
+.spot:nth-child(even){direction:rtl}
+.spot:nth-child(even)>*{direction:ltr}
+@media(max-width:880px){.spot{grid-template-columns:1fr;gap:2rem;padding:2.4rem 0}.spot:nth-child(even){direction:ltr}}
+.spot h3{font-family:'Fraunces';font-size:clamp(1.5rem,3vw,2.1rem);font-weight:600;margin-bottom:.8rem}
+.spot p{color:var(--mut);margin-bottom:1.2rem}
+.ticklist{list-style:none}
+.ticklist li{padding:.42rem 0 .42rem 2rem;position:relative;font-weight:600;font-size:.97rem}
+.ticklist li::before{content:"";position:absolute;left:0;top:.6rem;width:19px;height:19px;border-radius:50%;background:var(--mint) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%230A3D2F" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg>') center/11px no-repeat}
+.shot{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.shot .cap{background:var(--paper);border-top:1px solid var(--line-2);padding:.6rem 1rem;font-size:.72rem;font-weight:700;color:var(--mut);text-align:center}
+
+/* Maquette facture */
+.m-inv{padding:1.3rem;font-size:.78rem}
+.m-inv .h{display:flex;gap:.7rem;align-items:center;border-bottom:3px solid var(--green);padding-bottom:.7rem;margin-bottom:.8rem}
+.m-inv .h .ic{width:34px;height:34px;border-radius:9px;background:var(--green);display:grid;place-items:center;flex:none}
+.m-inv .h b{color:var(--green);font-size:.95rem}
+.m-inv .h small{display:block;color:var(--mut);font-weight:700;font-size:.68rem}
+.m-inv table{width:100%;border-collapse:collapse;margin:.5rem 0}
+.m-inv th{background:var(--green);color:#fff;font-size:.63rem;text-align:left;padding:.35rem .5rem}
+.m-inv th:last-child,.m-inv td:last-child{text-align:right}
+.m-inv td{padding:.35rem .5rem;border-bottom:1px solid var(--line-2);font-size:.72rem}
+.m-inv .tot{text-align:right;font-weight:800;color:var(--green);font-size:.85rem}
+/* Maquette stocks */
+.m-stk{padding:1.1rem;font-size:.74rem}
+.m-stk table{width:100%;border-collapse:collapse}
+.m-stk th{font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);text-align:left;padding:.4rem .5rem;border-bottom:1.5px solid var(--line)}
+.m-stk td{padding:.5rem;border-bottom:1px solid var(--line-2)}
+.m-stk .alert td{background:#FBEAE5}
+.pill{display:inline-block;padding:.14rem .55rem;border-radius:99px;font-size:.62rem;font-weight:800}
+.pill.ok{background:#E3F2EA;color:var(--green)}
+.pill.low{background:#FBEAE5;color:#C0492F}
+/* Maquette sync */
+.m-sync{padding:1.6rem;display:flex;align-items:center;justify-content:center;gap:1.2rem;min-height:230px;background:linear-gradient(180deg,#fff, #F6F3EC)}
+.dev{background:#fff;border:1px solid var(--line);border-radius:12px;padding:.8rem;text-align:center;box-shadow:0 12px 26px -14px rgba(16,32,27,.25)}
+.dev svg{width:44px;height:44px;color:var(--green)}
+.dev b{display:block;font-size:.72rem;margin-top:.3rem}
+.link-anim{flex:none;width:64px;height:3px;background:repeating-linear-gradient(90deg,var(--mint) 0 8px,transparent 8px 16px);background-size:32px 3px;animation:dash 1.2s linear infinite;border-radius:3px}
+@keyframes dash{to{background-position:32px 0}}
+.cloud-ic{width:56px;height:56px;border-radius:16px;background:var(--green);display:grid;place-items:center;box-shadow:0 14px 30px -12px rgba(14,90,69,.6)}
+.cloud-ic svg{width:30px;height:30px;color:#fff}
+
+/* ---------- Grille fonctions ---------- */
+.gridf{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.1rem;margin-top:2.6rem}
+.gf{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.5rem;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.gf:hover{transform:translateY(-5px);box-shadow:var(--sh)}
+.gf .ic{width:44px;height:44px;border-radius:12px;background:#E9F4EE;color:var(--green);display:grid;place-items:center;margin-bottom:1rem}
+.gf .ic svg{width:22px;height:22px}
+.gf h3{font-size:1.02rem;font-weight:800;margin-bottom:.4rem}
+.gf p{font-size:.9rem;color:var(--mut)}
+
+/* ---------- Vidéo ---------- */
+.video{background:var(--ink);color:#fff}
+.video .h2{color:#fff}
+.vframe{position:relative;margin:2.4rem auto 0;max-width:880px;aspect-ratio:16/9;border-radius:20px;overflow:hidden;background:linear-gradient(135deg,var(--green-d),#0B2E24);box-shadow:0 40px 90px -30px rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.09)}
+.vframe iframe{width:100%;height:100%;border:0;display:none}
+.vposter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;cursor:pointer}
+.vposter .bars{display:flex;gap:10px;align-items:flex-end;opacity:.2;position:absolute;right:8%;bottom:0}
+.vposter .bars i{display:block;width:26px;border-radius:8px 8px 0 0;background:#fff}
+.play{width:84px;height:84px;border-radius:50%;background:var(--amber);display:grid;place-items:center;box-shadow:0 20px 50px -12px rgba(242,179,61,.65);transition:transform .3s var(--ease)}
+.vposter:hover .play{transform:scale(1.08)}
+.play svg{width:30px;height:30px;color:#3a2900;margin-left:4px}
+.vposter b{font-size:1.05rem}
+.vposter small{color:rgba(255,255,255,.65);font-size:.85rem}
 
 /* ---------- Tarifs ---------- */
-.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;margin-top:2.4rem;align-items:stretch}
-.plan{background:#fff;border:1.5px solid var(--ligne);border-radius:18px;padding:1.8rem;display:flex;flex-direction:column}
-.plan.star{border-color:var(--vert);box-shadow:0 16px 40px rgba(14,90,69,.14);position:relative}
-.plan.star .tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--ambre);color:#3d2a00;font-size:.72rem;font-weight:800;padding:.25rem .9rem;border-radius:99px;white-space:nowrap}
-.plan h3{font-family:'Manrope';font-weight:800;font-size:1.15rem}
-.plan .price{font-family:'Fraunces';font-size:2rem;font-weight:700;margin:.6rem 0 .1rem;color:var(--vert)}
-.plan .per{font-size:.8rem;color:var(--gris);margin-bottom:1rem}
-.plan ul{list-style:none;flex:1;margin-bottom:1.4rem}
-.plan li{font-size:.9rem;padding:.34rem 0 .34rem 1.6rem;position:relative;color:#333}
-.plan li::before{content:"✓";position:absolute;left:0;color:var(--vert);font-weight:800}
-.plan li.no{color:#b6b0a4}.plan li.no::before{content:"—";color:#c9c3b6}
-.plan .btn{text-align:center}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.3rem;margin-top:2.8rem;align-items:stretch}
+.plan{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:2rem;display:flex;flex-direction:column;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.plan:hover{transform:translateY(-6px);box-shadow:var(--sh)}
+.plan.star{border-color:var(--green);position:relative;background:linear-gradient(180deg,#fff,#F7FBF8)}
+.plan.star .tag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--amber);color:#3a2900;font-size:.72rem;font-weight:800;padding:.3rem 1rem;border-radius:99px;white-space:nowrap;box-shadow:0 8px 18px -8px rgba(242,179,61,.7)}
+.plan h3{font-weight:800;font-size:1.12rem}
+.plan .price{font-family:'Fraunces';font-size:2.3rem;font-weight:600;margin:.7rem 0 .1rem;color:var(--green)}
+.plan .per{font-size:.8rem;color:var(--mut);margin-bottom:1.2rem}
+.plan ul{list-style:none;flex:1;margin-bottom:1.6rem}
+.plan li{font-size:.92rem;padding:.36rem 0 .36rem 1.7rem;position:relative}
+.plan li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}
+.plan li.no{color:#B9B2A3}.plan li.no::before{content:"—";color:#CFC8B9}
+.plan .btn{width:100%}
 
 /* ---------- Licences ---------- */
-.steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.2rem;margin-top:2.2rem}
-.step3{background:#fff;border:1px solid var(--ligne);border-radius:16px;padding:1.5rem}
-.step3 .n{width:38px;height:38px;border-radius:50%;background:var(--vert);color:#fff;display:grid;place-items:center;font-weight:800;font-family:'Fraunces';font-size:1.1rem;margin-bottom:.9rem}
-.step3 h3{font-family:'Manrope';font-weight:800;font-size:1rem;margin-bottom:.4rem}
-.step3 p{font-size:.9rem;color:var(--gris)}
+.tl{position:relative;margin-top:3rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.3rem}
+.tls{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.8rem;position:relative}
+.tls .n{width:44px;height:44px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-family:'Fraunces';font-weight:600;font-size:1.25rem;margin-bottom:1.1rem;box-shadow:0 10px 22px -8px rgba(14,90,69,.55)}
+.tls h3{font-weight:800;font-size:1.05rem;margin-bottom:.45rem}
+.tls p{font-size:.92rem;color:var(--mut)}
+.keybox{margin-top:2.2rem;background:var(--green-d);color:#fff;border-radius:18px;padding:1.6rem 2rem;display:flex;gap:1.6rem;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.keybox code{font-family:ui-monospace,Consolas,monospace;background:rgba(255,255,255,.1);padding:.55rem 1rem;border-radius:10px;letter-spacing:.08em;font-size:1rem;border:1px dashed rgba(255,255,255,.3)}
+.keybox p{font-size:.88rem;color:rgba(255,255,255,.75);max-width:46ch}
 
 /* ---------- FAQ ---------- */
-.faq{background:var(--sable)}
-details{background:#fff;border:1px solid var(--ligne);border-radius:14px;margin-top:.8rem;overflow:hidden}
-summary{padding:1.1rem 1.3rem;font-weight:800;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:1rem;align-items:center}
+.faqgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem 2rem;margin-top:2.4rem}
+@media(max-width:820px){.faqgrid{grid-template-columns:1fr}}
+details{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;height:fit-content;transition:box-shadow .3s}
+details[open]{box-shadow:var(--sh)}
+summary{padding:1.15rem 1.3rem;font-weight:800;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:1rem;align-items:center;font-size:.97rem}
 summary::-webkit-details-marker{display:none}
-summary::after{content:"+";font-family:'Fraunces';font-size:1.4rem;color:var(--vert);transition:transform .2s;flex:none}
+summary::after{content:"+";font-family:'Fraunces';font-size:1.5rem;color:var(--green);transition:transform .3s var(--ease);flex:none;line-height:1}
 details[open] summary::after{transform:rotate(45deg)}
-details p{padding:0 1.3rem 1.2rem;color:var(--gris);font-size:.95rem}
+details p{padding:0 1.3rem 1.2rem;color:var(--mut);font-size:.92rem}
 
-/* ---------- Téléchargement / contact ---------- */
-.dl-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;margin-top:2.2rem}
-.dl{background:var(--vert-fonce);color:#fff;border-radius:18px;padding:1.8rem;display:flex;flex-direction:column;gap:.6rem}
-.dl h3{font-family:'Manrope';font-weight:800;font-size:1.1rem}
-.dl p{font-size:.88rem;color:rgba(255,255,255,.75);flex:1}
-.dl .btn{text-align:center}
-.contact-box{background:#fff;border:1px solid var(--ligne);border-radius:18px;padding:2rem;display:flex;gap:2rem;flex-wrap:wrap;margin-top:2rem;align-items:center;justify-content:space-between}
-.contact-box .btns{display:flex;gap:.8rem;flex-wrap:wrap}
+/* ---------- Bande CTA ---------- */
+.ctaband{background:radial-gradient(900px 400px at 30% 0%,#14523F,var(--green-d));color:#fff;border-radius:26px;padding:3.6rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+.ctaband h2{font-family:'Fraunces';font-size:clamp(1.8rem,3.6vw,2.6rem);font-weight:600;margin-bottom:.7rem}
+.ctaband p{color:rgba(255,255,255,.75);margin-bottom:1.8rem}
+.ctaband .btns{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap}
 
-footer{background:var(--vert-fonce);color:rgba(255,255,255,.7);padding:2.5rem 0;font-size:.85rem}
-footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:center}
+/* ---------- Téléchargement ---------- */
+.dl-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.2rem;margin-top:2.6rem}
+.dl{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.9rem;display:flex;flex-direction:column;gap:.7rem;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.dl:hover{transform:translateY(-5px);box-shadow:var(--sh)}
+.dl .ic{width:46px;height:46px;border-radius:12px;background:#E9F4EE;color:var(--green);display:grid;place-items:center}
+.dl .ic svg{width:24px;height:24px}
+.dl h3{font-weight:800;font-size:1.08rem}
+.dl p{font-size:.9rem;color:var(--mut);flex:1}
+.dl .note{font-size:.74rem;color:var(--mut)}
+#os-hint{font-weight:700;color:var(--green)}
+
+/* ---------- Contact / footer ---------- */
+.contact-box{background:#fff;border:1px solid var(--line);border-radius:20px;padding:2.2rem;display:flex;gap:2rem;flex-wrap:wrap;align-items:center;justify-content:space-between;box-shadow:var(--sh)}
+footer{background:var(--ink);color:rgba(255,255,255,.66);padding:3rem 0 2.4rem;font-size:.86rem;margin-top:5rem}
+footer .wrap{display:flex;justify-content:space-between;gap:1.4rem;flex-wrap:wrap;align-items:center}
 footer a{color:rgba(255,255,255,.85);text-decoration:none}
+footer a:hover{color:var(--amber)}
 </style>
 </head>
 <body>
 
-<nav><div class="wrap">
+<nav id="nav"><div class="wrap">
   <a class="logo" href="#">
     <svg viewBox="0 0 192 192"><rect width="192" height="192" rx="42" fill="#0E5A45"/><rect x="46" y="104" width="22" height="42" rx="6" fill="#F2B33D"/><rect x="78" y="84" width="22" height="62" rx="6" fill="#7FC8A9"/><rect x="110" y="58" width="22" height="88" rx="6" fill="#fff"/><rect x="38" y="36" width="116" height="16" rx="6" fill="#fff"/></svg>
     Trezo
   </a>
   <div class="links">
-    <a href="#fonctionnalites">Fonctionnalités</a>
+    <a href="#produit">Produit</a>
+    <a href="#video">Démo</a>
     <a href="#tarifs">Tarifs</a>
     <a href="#licences">Licences</a>
     <a href="#faq">FAQ</a>
     <a href="#contact">Contact</a>
-    <a class="btn btn-a" href="#telecharger">Essai gratuit</a>
+    <a class="btn btn-a" data-link="app" target="_blank" rel="noopener" href="#">Essai gratuit</a>
   </div>
 </div></nav>
 
 <header class="hero">
-  <svg class="bg-bars" viewBox="0 0 192 192"><rect x="46" y="104" width="22" height="42" rx="6" fill="#fff"/><rect x="78" y="84" width="22" height="62" rx="6" fill="#fff"/><rect x="110" y="58" width="22" height="88" rx="6" fill="#fff"/><rect x="38" y="36" width="116" height="16" rx="6" fill="#fff"/></svg>
   <div class="wrap">
     <div>
-      <h1>La trésorerie de votre PME, <em>enfin simple.</em></h1>
-      <p>Encaissements, dépenses, salaires, stocks et factures — dans une seule application pensée pour les PME africaines. Sur téléphone comme sur ordinateur, avec ou sans Internet.</p>
-      <div class="cta">
-        <!-- TODO-APP : remplacez # par l'adresse de votre application -->
-        <a class="btn btn-a" href="#telecharger">Essayer gratuitement 14 jours</a>
-        <a class="btn btn-o" href="#fonctionnalites" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)">Découvrir</a>
+      <span class="kicker rv">Logiciel de gestion de trésorerie</span>
+      <h1 class="rv d1">Vos chiffres au clair. <em>Chaque jour.</em></h1>
+      <p class="sub rv d2">Trezo réunit trésorerie, facturation, stocks, salaires, clients et objectifs dans un logiciel élégant conçu pour les PME africaines — multi-utilisateurs, avec droits d’accès et journal d’audit. Sur téléphone, ordinateur et Windows.</p>
+      <div class="cta rv d3">
+        <a class="btn btn-a" data-link="app" target="_blank" rel="noopener" href="#">Essayer gratuitement 14 jours</a>
+        <a class="btn btn-g" href="#video">Voir la démo
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></a>
       </div>
-      <div class="proof">
-        <div><b>2 min</b>pour créer votre première facture</div>
-        <div><b>0 ressaisie</b>importez vos fichiers Excel existants</div>
-        <div><b>19 devises</b>FCFA, MAD, GNF, NGN et plus</div>
+      <div class="ticks rv d3">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4 10-10"/></svg>Sans carte bancaire</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4 10-10"/></svg>Prêt en 2 minutes</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 13l4 4 10-10"/></svg>FCFA &amp; 18 autres devises</span>
       </div>
     </div>
-    <div class="phone-col">
-      <div class="phone"><div class="scr">
-        <div class="p-head"><span class="ic"><svg viewBox="0 0 192 192" width="15"><rect x="46" y="104" width="22" height="42" rx="6" fill="#F2B33D"/><rect x="78" y="84" width="22" height="62" rx="6" fill="#7FC8A9"/><rect x="110" y="58" width="22" height="88" rx="6" fill="#0E5A45"/><rect x="38" y="36" width="116" height="16" rx="6" fill="#0E5A45"/></svg></span><div><b>Boutique Sagna &amp; Frères</b><small>Licence — 248 j restants · ✓ synchronisé</small></div></div>
-        <div class="p-hero"><div class="l">Solde de trésorerie</div><div class="v">4 862 500 FCFA</div><div style="font-size:8px;opacity:.85">juil. 26 : +1 240 000 / −683 500</div><div class="bars"><i style="height:16px;background:#F2B33D"></i><i style="height:26px;background:#7FC8A9"></i><i style="height:36px;background:#fff"></i></div></div>
-        <div class="p-kpis">
-          <div class="p-kpi"><div class="l">Encaissements</div><div class="v g">1 240 000</div></div>
-          <div class="p-kpi"><div class="l">Décaissements</div><div class="v r">683 500</div></div>
-          <div class="p-kpi"><div class="l">Résultat</div><div class="v g">556 500</div></div>
-          <div class="p-kpi"><div class="l">Objectif</div><div class="v">83 %</div></div>
+    <div class="stage rv d2">
+      <div class="browser">
+        <div class="bar"><i></i><i></i><i></i><span class="url">app.trezo — Tableau de bord</span></div>
+        <div class="b-body">
+          <div class="b-side">
+            <div class="it on"><span class="dot"></span>Tableau</div>
+            <div class="it"><span class="dot"></span>Flux</div>
+            <div class="it"><span class="dot"></span>Salaires</div>
+            <div class="it"><span class="dot"></span>Objectifs</div>
+            <div class="it"><span class="dot"></span>Stocks</div>
+            <div class="it"><span class="dot"></span>Factures</div>
+            <div class="it"><span class="dot"></span>Journal</div>
+          </div>
+          <div class="b-main">
+            <div class="b-hero"><div class="l">Solde de trésorerie</div><div class="v">4 862 500 FCFA</div><div class="bars"><i style="height:14px;background:#F2B33D"></i><i style="height:24px;background:#7FC8A9"></i><i style="height:34px;background:#fff"></i></div></div>
+            <div class="b-kpis">
+              <div class="b-kpi"><div class="l">Encaiss.</div><div class="v g">1 240 000</div></div>
+              <div class="b-kpi"><div class="l">Décaiss.</div><div class="v r">683 500</div></div>
+              <div class="b-kpi"><div class="l">Résultat</div><div class="v g">+556 500</div></div>
+              <div class="b-kpi"><div class="l">Objectif</div><div class="v">83 %</div></div>
+            </div>
+            <div class="b-chart"><div class="t">Flux des 6 derniers mois</div><div class="b-cols">
+              <div><i style="height:52%;background:#0E5A45;animation-delay:.1s"></i><i style="height:36%;background:#F2B33D;animation-delay:.15s"></i></div>
+              <div><i style="height:40%;background:#0E5A45;animation-delay:.2s"></i><i style="height:30%;background:#F2B33D;animation-delay:.25s"></i></div>
+              <div><i style="height:66%;background:#0E5A45;animation-delay:.3s"></i><i style="height:44%;background:#F2B33D;animation-delay:.35s"></i></div>
+              <div><i style="height:58%;background:#0E5A45;animation-delay:.4s"></i><i style="height:50%;background:#F2B33D;animation-delay:.45s"></i></div>
+              <div><i style="height:78%;background:#0E5A45;animation-delay:.5s"></i><i style="height:47%;background:#F2B33D;animation-delay:.55s"></i></div>
+              <div><i style="height:94%;background:#0E5A45;animation-delay:.6s"></i><i style="height:54%;background:#F2B33D;animation-delay:.65s"></i></div>
+            </div></div>
+          </div>
         </div>
-        <div class="p-chart"><div class="t">Flux des 6 derniers mois</div><div class="cols">
-          <div><i style="height:55%;background:#0E5A45"></i><i style="height:38%;background:#F2B33D"></i></div>
-          <div><i style="height:42%;background:#0E5A45"></i><i style="height:30%;background:#F2B33D"></i></div>
-          <div><i style="height:68%;background:#0E5A45"></i><i style="height:45%;background:#F2B33D"></i></div>
-          <div><i style="height:60%;background:#0E5A45"></i><i style="height:52%;background:#F2B33D"></i></div>
-          <div><i style="height:80%;background:#0E5A45"></i><i style="height:48%;background:#F2B33D"></i></div>
-          <div><i style="height:95%;background:#0E5A45"></i><i style="height:55%;background:#F2B33D"></i></div>
-        </div></div>
-        <div class="p-nav"><span class="on">Tableau</span><span>Flux</span><span>Factures</span><span>Stocks</span><span>Plus</span></div>
+      </div>
+      <div class="phone2"><div class="scr">
+        <div class="ph">Boutique Sagna<small>✓ synchronisé à l'instant</small></div>
+        <div class="row"><div><b>Vente comptoir</b><small>Aujourd'hui · Ventes</small></div><span class="amt g">+85 000</span></div>
+        <div class="row"><div><b>Carburant</b><small>Aujourd'hui · Transport</small></div><span class="amt r">−12 500</span></div>
+        <div class="row"><div><b>Facture BSF-0047</b><small>Hier · Encaissée · Wave</small></div><span class="amt g">+421 000</span></div>
+        <div class="row"><div><b>Salaire M. Diop</b><small>Hier · Salaires</small></div><span class="amt r">−150 000</span></div>
       </div></div>
     </div>
   </div>
 </header>
 
-<section id="fonctionnalites"><div class="wrap">
-  <span class="kicker">Fonctionnalités</span>
-  <h2 class="h2">Tout ce qu'il faut pour piloter votre argent.</h2>
-  <p class="lead">Huit modules qui travaillent ensemble : une vente met à jour le stock, un salaire payé devient un décaissement, une facture encaissée alimente le tableau de bord.</p>
-  <div class="feats">
-    <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></div><h3>Tableau de bord</h3><p>Solde en temps réel, graphiques sur 6 mois, alertes de stock bas et rapport mensuel PDF en un clic.</p></div>
-    <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17l-4-4 4-4"/><path d="M3 13h14"/><path d="M17 7l4 4-4 4"/><path d="M21 11H7"/></svg></div><h3>Encaissements &amp; dépenses</h3><p>Saisie en quelques secondes, recherche instantanée, catégories claires, import de vos fichiers Excel ou CSV sans ressaisie.</p></div>
-    <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l4 4v16H6z"/><path d="M15 2v4h4"/><path d="M9 12h7M9 16h7"/></svg></div><h3>Facturation professionnelle</h3><p>Factures PDF à votre logo, aperçu avant impression, suivi payées / en attente, encaissement en un clic.</p></div>
-    <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg></div><h3>Stocks maîtrisés</h3><p>Chaque vente décompte le stock automatiquement. Seuils d'alerte pour ne plus jamais tomber en rupture.</p></div>
-    <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14.5c2.8 0 4.5 2 4.5 4.5"/></svg></div><h3>Salaires suivis</h3><p>Votre équipe, la masse salariale, et le paiement de chaque mois enregistré d'un geste dans la trésorerie.</p></div>
-    <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></div><h3>Objectifs motivants</h3><p>Fixez un objectif d'encaissements par mois et suivez la progression de votre équipe en pourcentage.</p></div>
-    <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h13a2 2 0 012 2v14H6a2 2 0 01-2-2V4z"/><path d="M4 4a2 2 0 012-2h11v4"/><path d="M9 9h6"/></svg></div><h3>Journal &amp; exports</h3><p>Chaque action est tracée. Export Excel complet pour votre comptable : transactions, salaires, stocks, factures.</p></div>
-    <div class="feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div><h3>Sécurité sérieuse</h3><p>Compte protégé par mot de passe, mode lecture seule avec code PIN pour montrer vos chiffres sans risque.</p></div>
+<div class="sectors"><div class="wrap rv">
+  <span class="lbl">Conçu pour</span>
+  <span class="chip">Boutiques &amp; commerces</span><span class="chip">Quincailleries</span><span class="chip">Distribution</span><span class="chip">Prestataires de services</span><span class="chip">Restauration</span><span class="chip">Pharmacies &amp; parapharmacies</span><span class="chip">Ateliers</span>
+</div></div>
+
+<div class="stats"><div class="wrap">
+  <div class="stat rv"><b>9</b><span>modules intégrés</span></div>
+  <div class="stat rv d1"><b>19</b><span>devises · Wave, Orange Money, caisse &amp; banque</span></div>
+  <div class="stat rv d2"><b>30 s</b><span>pour créer une facture PDF</span></div>
+  <div class="stat rv d3"><b>14 j</b><span>d'essai gratuit, sans engagement</span></div>
+</div></div>
+
+<section id="produit"><div class="wrap">
+  <span class="kicker rv">Le produit</span>
+  <h2 class="h2 rv d1">Un poste de pilotage complet, pas un simple cahier de comptes.</h2>
+  <p class="lead rv d2">Chaque module alimente les autres : une vente met à jour le stock, un salaire payé devient un décaissement, une facture encaissée nourrit le tableau de bord. Zéro double saisie.</p>
+
+  <div class="spot">
+    <div class="rv">
+      <h3>Voyez votre trésorerie comme jamais.</h3>
+      <p>Solde en temps réel, comparaison encaissements/dépenses sur 6 mois, répartition des charges par catégorie et alertes de stock bas — le tout dès l'ouverture.</p>
+      <ul class="ticklist">
+        <li>Rapport mensuel PDF professionnel et soldes par compte (caisse, banque, mobile money)</li>
+        <li>Objectifs calculés automatiquement depuis la valeur du stock — jauges, projections de fin de mois et recommandations</li>
+        <li>Recherche instantanée dans tout l'historique</li>
+        <li>Export Excel complet pour votre comptable</li>
+      </ul>
+    </div>
+    <div class="shot rv d1">
+      <div class="m-stk">
+        <table>
+          <tr><th>Produit</th><th>Stock</th><th>Prix vente</th><th>État</th></tr>
+          <tr><td><b>Sac de riz 50 kg</b></td><td>124</td><td>28 500</td><td><span class="pill ok">En stock</span></td></tr>
+          <tr><td><b>Huile 20 L</b></td><td>36</td><td>21 000</td><td><span class="pill ok">En stock</span></td></tr>
+          <tr class="alert"><td><b>Sucre 50 kg</b></td><td>4 ⚠</td><td>32 000</td><td><span class="pill low">Stock bas</span></td></tr>
+          <tr><td><b>Lait en poudre</b></td><td>58</td><td>3 500</td><td><span class="pill ok">En stock</span></td></tr>
+          <tr><td><b>Savon (carton)</b></td><td>210</td><td>9 800</td><td><span class="pill ok">En stock</span></td></tr>
+        </table>
+      </div>
+      <div class="cap">Stocks — seuils d'alerte automatiques</div>
+    </div>
+  </div>
+
+  <div class="spot">
+    <div class="rv">
+      <h3>Pro forma, définitive, créances : la facturation complète.</h3>
+      <p>Votre logo, une numérotation à vos initiales (CMD-2026-0001…), le montant en toutes lettres, et un aperçu fidèle avant impression. Devis en pro forma, conversion en définitive sans ressaisie, PDF envoyé par WhatsApp.</p>
+      <ul class="ticklist">
+        <li>Aperçu identique au document final, impression directe</li>
+        <li>Pro forma → Définitive en un clic, sans ressaisie ni double numérotation</li>
+        <li>Suivi des créances : payées, partielles, impayées — acomptes, totaux et exports pour vos relances</li>
+        <li>« Arrêté la présente facture à la somme de… » : montant en lettres généré automatiquement</li>
+      </ul>
+    </div>
+    <div class="shot rv d1">
+      <div class="m-inv">
+        <div class="h"><span class="ic"><svg viewBox="0 0 192 192" width="19"><rect x="46" y="104" width="22" height="42" rx="6" fill="#F2B33D"/><rect x="78" y="84" width="22" height="62" rx="6" fill="#7FC8A9"/><rect x="110" y="58" width="22" height="88" rx="6" fill="#fff"/><rect x="38" y="36" width="116" height="16" rx="6" fill="#fff"/></svg></span><div><b>Boutique Sagna &amp; Frères</b><small>FACTURE BSF-2026-0047</small></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:.72rem"><span><b>Client :</b> Restaurant Le Baobab</span><span><b>Date :</b> 4 juil. 2026</span></div>
+        <table><tr><th>Désignation</th><th>Qté</th><th>P.U.</th><th>Total</th></tr>
+        <tr><td>Sac de riz 50 kg</td><td>10</td><td>28 500</td><td>285 000</td></tr>
+        <tr><td>Huile 20 L</td><td>6</td><td>21 000</td><td>126 000</td></tr>
+        <tr><td>Livraison</td><td>1</td><td>10 000</td><td>10 000</td></tr></table>
+        <div class="tot">Total TTC : 421 000 FCFA</div>
+        <div style="margin-top:.5rem;font-size:.6rem;font-style:italic;color:#5F6B65;border-top:1px dashed #E8E3D9;padding-top:.4rem">Arrêté la présente facture à la somme de : Quatre cent vingt et un mille (421 000) francs CFA TTC.</div>
+      </div>
+      <div class="cap">Facturation — aperçu avant impression</div>
+    </div>
+  </div>
+
+  <div class="spot">
+    <div class="rv">
+      <h3>Toute votre équipe. Chacun ses droits.</h3>
+      <p>Invitez vos collaborateurs : chacun se connecte avec son propre compte, et vous décidez de ses droits module par module. Tout est synchronisé et sauvegardé automatiquement, et la licence est vérifiée sur nos serveurs : infalsifiable.</p>
+      <ul class="ticklist">
+        <li>Multi-utilisateurs : un compte e-mail + mot de passe par collaborateur</li>
+        <li>Droits par module : aucun accès, lecture, création seule, écriture ou total</li>
+        <li>Journal d’audit : qui a créé, modifié ou supprimé quoi — horodaté et exportable</li>
+        <li>Version 100 % hors ligne disponible (Trezo Classique)</li>
+      </ul>
+    </div>
+    <div class="shot rv d1">
+      <div class="m-sync">
+        <div class="dev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><b>Téléphone</b></div>
+        <div class="link-anim"></div>
+        <div class="cloud-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 18a4.5 4.5 0 100-9 6 6 0 00-11.6 1.6A4 4 0 006.5 18h11z"/></svg></div>
+        <div class="link-anim"></div>
+        <div class="dev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4" width="19" height="12.5" rx="2"/><path d="M8 20.5h8M12 16.5v4"/></svg><b>Ordinateur</b></div>
+      </div>
+      <div class="cap">Synchronisation cloud en temps réel</div>
+    </div>
+  </div>
+
+  <div class="gridf">
+    <div class="gf rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17l-4-4 4-4"/><path d="M3 13h14"/><path d="M17 7l4 4-4 4"/><path d="M21 11H7"/></svg></div><h3>Flux en quelques secondes</h3><p>Saisie rapide, catégories claires, recherche et filtre par mois dans tout l'historique.</p></div>
+    <div class="gf rv d1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></div><h3>Import Excel / CSV</h3><p>Reprenez vos fichiers existants sans ressaisie : structure contrôlée, erreurs signalées ligne par ligne.</p></div>
+    <div class="gf rv d2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14.5c2.8 0 4.5 2 4.5 4.5"/></svg></div><h3>Salaires suivis</h3><p>Votre équipe, la masse salariale, et chaque paiement mensuel enregistré d'un geste.</p></div>
+    <div class="gf rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></div><h3>Objectifs motivants</h3><p>Un cap d'encaissements par mois, une barre de progression, un cap tenu.</p></div>
+    <div class="gf rv d1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h13a2 2 0 012 2v14H6a2 2 0 01-2-2V4z"/><path d="M4 4a2 2 0 012-2h11v4"/><path d="M9 9h6"/></svg></div><h3>Journal d'activité</h3><p>Chaque action tracée et horodatée : vous savez toujours qui a fait quoi, et quand.</p></div>
+    <div class="gf rv d2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div><h3>Verrou lecture seule</h3><p>Confiez l'appareil à un employé ou montrez vos chiffres à un client — sans risque de modification.</p></div>
+    <div class="gf rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2.2"/><path d="M5.5 16c.6-1.6 2-2.5 3.5-2.5s2.9.9 3.5 2.5"/><path d="M15 9h4M15 13h3"/></svg></div><h3>Base clients intégrée</h3><p>Import Excel en masse, fiches complètes, et autocomplétion à la facturation : le client se remplit tout seul.</p></div>
+    <div class="gf rv d1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="17" cy="14.5" r="1.4" fill="currentColor"/></svg></div><h3>Comptes &amp; mobile money</h3><p>Caisse, banque, Wave, Orange Money… chaque encaissement est rattaché à sa poche, avec transferts internes et soldes en temps réel.</p></div>
+    <div class="gf rv d2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a9 9 0 109 9"/><path d="M12 7v5l3.5 2"/></svg></div><h3>Aide à la décision</h3><p>Projection de fin de mois, produits stars, faible rotation, alertes objectif : Trezo vous dit où agir.</p></div>
   </div>
 </div></section>
 
-<section class="demo" id="demo"><div class="wrap">
-  <span class="kicker">En situation</span>
-  <h2 class="h2">Des factures dont vous serez fier.</h2>
-  <div class="grid">
-    <div class="inv-mock">
-      <div class="h"><span class="ic"><svg viewBox="0 0 192 192" width="20"><rect x="46" y="104" width="22" height="42" rx="6" fill="#F2B33D"/><rect x="78" y="84" width="22" height="62" rx="6" fill="#7FC8A9"/><rect x="110" y="58" width="22" height="88" rx="6" fill="#fff"/><rect x="38" y="36" width="116" height="16" rx="6" fill="#fff"/></svg></span><div><b>Boutique Sagna &amp; Frères</b><small>FACTURE TRZ-2026-047</small></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:.76rem"><span><b>Client :</b> Restaurant Le Baobab</span><span><b>Date :</b> 4 juil. 2026</span></div>
-      <table><tr><th>Désignation</th><th>Qté</th><th>P.U.</th><th>Total</th></tr>
-      <tr><td>Sac de riz 50 kg</td><td>10</td><td>28 500</td><td>285 000</td></tr>
-      <tr><td>Huile 20 L</td><td>6</td><td>21 000</td><td>126 000</td></tr>
-      <tr><td>Livraison</td><td>1</td><td>10 000</td><td>10 000</td></tr></table>
-      <div class="tot">Total TTC : 421 000 FCFA</div>
-      <div style="font-size:.62rem;color:#999;margin-top:.8rem">Facture générée avec Trezo</div>
-    </div>
-    <div>
-      <h3 style="font-family:'Manrope';font-weight:800;font-size:1.3rem;margin-bottom:.4rem">Créée en 30 secondes, imprimée ou envoyée en PDF.</h3>
-      <p class="lead">Choisissez le client, sélectionnez vos produits — les prix se remplissent seuls et le stock se met à jour.</p>
-      <ul class="check">
-        <li>Votre logo et le nom de votre entreprise sur chaque document</li>
-        <li>Aperçu avant impression, fidèle au document final</li>
-        <li>Numérotation automatique et historique filtrable</li>
-        <li>Facture générée directement depuis un encaissement</li>
-        <li>TVA optionnelle selon votre régime</li>
-      </ul>
+<section class="video" id="video"><div class="wrap" style="text-align:center">
+  <span class="kicker rv" style="justify-content:center;color:var(--mint)">Démonstration</span>
+  <h2 class="h2 rv d1" style="margin:0 auto 1rem">Trezo en action, en 2 minutes.</h2>
+  <div class="vframe rv d2" id="vframe">
+    <iframe id="viframe" title="Démonstration Trezo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div class="vposter" id="vposter">
+      <div class="bars"><i style="height:60px"></i><i style="height:100px"></i><i style="height:150px"></i></div>
+      <div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+      <b>Regarder la démonstration</b>
+      <small id="vhint">Du premier flux à la facture imprimée</small>
     </div>
   </div>
 </div></section>
 
 <section id="tarifs"><div class="wrap">
-  <span class="kicker">Offres &amp; tarifs</span>
-  <h2 class="h2">Deux façons d'avoir Trezo. Un seul objectif : vos chiffres au clair.</h2>
-  <p class="lead">Licence annuelle liée au nom de votre entreprise. Pas de frais cachés, pas d'engagement au-delà de l'année.</p>
+  <span class="kicker rv">Offres &amp; tarifs</span>
+  <h2 class="h2 rv d1">Un tarif simple. Une licence à votre nom.</h2>
+  <p class="lead rv d2">Licence annuelle liée au nom de votre entreprise. Pas de frais cachés, pas de prélèvement automatique, pas d'engagement au-delà de l'année.</p>
   <div class="plans">
-    <div class="plan">
+    <div class="plan rv">
       <h3>Essai découverte</h3>
       <div class="price">0 FCFA</div>
-      <div class="per">14 jours, sans carte bancaire</div>
+      <div class="per">14 jours — sans carte bancaire</div>
       <ul>
-        <li>Toutes les fonctionnalités</li>
+        <li>Toutes les fonctionnalités, sans restriction</li>
         <li>Sur téléphone et ordinateur</li>
-        <li>Vos données conservées si vous passez à une offre payante</li>
+        <li>Vos données conservées si vous continuez</li>
       </ul>
-      <a class="btn btn-o" href="#telecharger">Commencer l'essai</a>
+      <a class="btn btn-o" data-link="app" target="_blank" rel="noopener" href="#">Commencer l'essai</a>
     </div>
-    <div class="plan star">
-      <span class="tag">Le plus choisi</span>
+    <div class="plan star rv d1">
+      <span class="tag">Recommandé</span>
       <h3>Trezo Cloud</h3>
       <!-- TODO-PRIX : votre tarif Cloud -->
       <div class="price">45 000 FCFA</div>
@@ -284,105 +500,182 @@ footer a{color:rgba(255,255,255,.85);text-decoration:none}
       <ul>
         <li>Synchronisation sur tous vos appareils</li>
         <li>Sauvegarde automatique permanente</li>
-        <li>Compte sécurisé par e-mail + mot de passe</li>
         <li>Licence infalsifiable, vérifiée sur serveur</li>
+        <li>Multi-utilisateurs avec droits d’accès par module</li>
         <li>Téléphone perdu = zéro donnée perdue</li>
       </ul>
       <a class="btn btn-p" href="#contact">Obtenir ma licence</a>
     </div>
-    <div class="plan">
+    <div class="plan rv d2">
       <h3>Trezo Classique</h3>
       <!-- TODO-PRIX : votre tarif Classique -->
       <div class="price">25 000 FCFA</div>
       <div class="per">par an et par entreprise</div>
       <ul>
         <li>100 % hors ligne après installation</li>
-        <li>Données stockées sur votre appareil uniquement</li>
+        <li>Données uniquement sur votre appareil</li>
         <li>Confidentialité maximale</li>
-        <li>Sauvegarde manuelle en un clic</li>
+        <li>Version Windows (.exe) incluse</li>
         <li class="no">Synchronisation multi-appareils</li>
       </ul>
       <a class="btn btn-o" href="#contact">Obtenir ma licence</a>
     </div>
   </div>
-  <p style="font-size:.78rem;color:var(--gris);margin-top:1rem">Version Windows installable (.exe) disponible pour les deux offres. Renouvellement annuel au même tarif.</p>
 </div></section>
 
-<section id="licences" style="background:var(--sable)"><div class="wrap">
-  <span class="kicker">Comment ça marche</span>
-  <h2 class="h2">Une licence simple, honnête, à votre nom.</h2>
-  <p class="lead">Chaque licence Trezo est une clé unique, liée au nom exact de votre entreprise et valable un an. Ni compte compliqué, ni prélèvement automatique.</p>
-  <div class="steps3">
-    <div class="step3"><div class="n">1</div><h3>Vous nous contactez</h3><p>Par WhatsApp ou e-mail, avec le nom exact de votre entreprise. Nous générons votre clé personnelle (format TRZO-XXXX-XXXX-XXXX).</p></div>
-    <div class="step3"><div class="n">2</div><h3>Vous activez en 30 secondes</h3><p>À la première ouverture, l'assistant vous demande le nom de l'entreprise puis la clé. C'est tout — l'application est à vous.</p></div>
-    <div class="step3"><div class="n">3</div><h3>Vous renouvelez chaque année</h3><p>Avant l'échéance, nous vous envoyons une nouvelle clé. Vos données ne sont jamais perdues, même si la licence expire.</p></div>
+<section id="licences" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap">
+  <span class="kicker rv">Comment ça marche</span>
+  <h2 class="h2 rv d1">Une licence honnête, activée en 30 secondes.</h2>
+  <div class="tl">
+    <div class="tls rv"><div class="n">1</div><h3>Vous nous contactez</h3><p>Par WhatsApp ou e-mail, avec le nom exact de votre entreprise. Nous générons votre clé personnelle, valable un an.</p></div>
+    <div class="tls rv d1"><div class="n">2</div><h3>Vous activez</h3><p>À la première ouverture, l'assistant vous demande le nom de l'entreprise puis la clé. C'est tout — l'application est à vous.</p></div>
+    <div class="tls rv d2"><div class="n">3</div><h3>Vous renouvelez chaque année</h3><p>Avant l'échéance, nous vous envoyons une nouvelle clé. Vos données ne sont jamais perdues, même licence expirée.</p></div>
+  </div>
+  <div class="keybox rv">
+    <div>
+      <div style="font-weight:800;font-size:1.05rem;margin-bottom:.3rem">Votre clé ressemble à ceci :</div>
+      <code>TRZO-C9LK-4F2A-8B1E</code>
+    </div>
+    <p>Chaque clé est cryptographiquement liée au nom de votre entreprise : elle ne fonctionne pour personne d'autre. Sur Trezo Cloud, la vérification s'effectue côté serveur — la date d'expiration ne peut pas être falsifiée.</p>
   </div>
 </div></section>
 
-<section id="faq" class="faq"><div class="wrap">
-  <span class="kicker">FAQ</span>
-  <h2 class="h2">Questions fréquentes</h2>
-  <details><summary>Trezo fonctionne-t-il sans connexion Internet ?</summary><p>Trezo Classique fonctionne entièrement hors ligne après l'installation : idéal si votre connexion est irrégulière. Trezo Cloud nécessite Internet pour synchroniser vos données entre appareils — c'est le prix de la sauvegarde automatique.</p></details>
-  <details><summary>Sur quels appareils puis-je utiliser Trezo ?</summary><p>Sur tout téléphone Android ou iPhone, tablette et ordinateur (Windows, Mac, Linux) via le navigateur, avec installation sur l'écran d'accueil comme une application. Une version Windows avec installateur classique (.exe) est également disponible.</p></details>
-  <details><summary>Mes données sont-elles en sécurité ?</summary><p>Avec Trezo Classique, vos données ne quittent jamais votre appareil : personne d'autre que vous ne peut les voir, pas même nous. Avec Trezo Cloud, elles sont hébergées sur une infrastructure sécurisée (chiffrement en transit, cloisonnement strict par entreprise) et votre compte est protégé par mot de passe. Dans les deux cas, un mode lecture seule avec code PIN vous permet de montrer vos chiffres sans risque de modification.</p></details>
-  <details><summary>Que se passe-t-il quand ma licence expire ?</summary><p>L'application se met en pause mais vos données sont intégralement conservées. Dès que vous entrez votre nouvelle clé de renouvellement, tout redémarre exactement où vous en étiez.</p></details>
-  <details><summary>Puis-je importer mes données existantes ?</summary><p>Oui. Le module Flux importe vos fichiers Excel (.xlsx) ou CSV : l'application contrôle la structure du fichier, signale les erreurs ligne par ligne et intègre les opérations valides sans aucune ressaisie. Un modèle Excel prêt à remplir est fourni dans l'application.</p></details>
-  <details><summary>Trezo gère-t-il ma devise ?</summary><p>19 devises sont proposées : FCFA (UEMOA et CEMAC), dirham marocain, dinar tunisien, naira, cedi, shilling kényan, franc guinéen, ouguiya, rand, euro, dollar et d'autres. Vous choisissez la vôtre à l'installation.</p></details>
-  <details><summary>Puis-je changer d'offre en cours de route ?</summary><p>Oui. Le passage de Classique vers Cloud se fait en quelques minutes : vous exportez votre sauvegarde depuis l'ancienne installation et l'importez dans votre nouvel espace Cloud — flux, stocks, factures, tout est repris.</p></details>
-  <details><summary>Y a-t-il une formation ou une assistance ?</summary><p>L'application est conçue pour être prise en main sans formation. En cas de besoin, l'assistance se fait par WhatsApp — envoyez votre question, réponse dans la journée ouvrée.</p></details>
+<section id="faq"><div class="wrap">
+  <span class="kicker rv">FAQ</span>
+  <h2 class="h2 rv d1">Questions fréquentes</h2>
+  <div class="faqgrid">
+    <details class="rv"><summary>Trezo fonctionne-t-il sans connexion Internet ?</summary><p>Trezo Classique (et sa version Windows) fonctionne entièrement hors ligne après installation : idéal si votre connexion est irrégulière. Trezo Cloud nécessite Internet pour synchroniser vos données entre appareils — c'est le prix de la sauvegarde automatique.</p></details>
+    <details class="rv d1"><summary>Sur quels appareils puis-je utiliser Trezo ?</summary><p>Téléphone Android ou iPhone, tablette, et ordinateur (Windows, Mac, Linux) : l'application s'installe depuis le navigateur en deux clics. Une version Windows avec installateur classique (.exe) est également proposée.</p></details>
+    <details class="rv"><summary>Mes données sont-elles en sécurité ?</summary><p>Avec Classique, vos données ne quittent jamais votre appareil — personne d'autre ne peut les voir, pas même nous. Avec Cloud, elles sont hébergées sur une infrastructure sécurisée avec cloisonnement strict par entreprise, et votre compte est protégé par mot de passe. Dans les deux cas, le mode lecture seule à code PIN protège vos chiffres des regards actifs.</p></details>
+    <details class="rv d1"><summary>Que se passe-t-il quand ma licence expire ?</summary><p>L'application se met en pause mais vos données sont intégralement conservées. Dès que vous entrez la clé de renouvellement, tout redémarre exactement où vous en étiez.</p></details>
+    <details class="rv"><summary>Puis-je importer mes données existantes ?</summary><p>Oui. Le module Flux importe vos fichiers Excel (.xlsx) ou CSV : structure contrôlée avant import, erreurs signalées ligne par ligne, aucune ressaisie. Un modèle prêt à remplir est fourni dans l'application.</p></details>
+    <details class="rv d1"><summary>Trezo gère-t-il ma devise ?</summary><p>19 devises : FCFA (UEMOA et CEMAC), dirham, dinar, naira, cedi, shilling, franc guinéen, ouguiya, rand, euro, dollar et d'autres. Vous choisissez la vôtre à l'installation.</p></details>
+    <details class="rv"><summary>Puis-je passer de Classique à Cloud ?</summary><p>Oui, en quelques minutes : exportez la sauvegarde depuis votre installation Classique, importez-la dans votre espace Cloud — flux, stocks, factures, tout est repris.</p></details>
+    <details class="rv d1"><summary>Y a-t-il une assistance ?</summary><p>L'application se prend en main sans formation. Pour toute question, l'assistance se fait par WhatsApp — réponse dans la journée ouvrée.</p></details>
+    <details class="rv"><summary>Puis-je donner des accès à mes employés ?</summary><p>Oui, avec Trezo Cloud. Vous invitez chaque collaborateur par un code : il crée son propre compte, et vous choisissez ses droits module par module (aucun accès, lecture seule, création, écriture ou total). Chaque action est tracée dans le journal d’audit avec l’auteur, la date et l’heure.</p></details>
+  </div>
 </div></section>
 
+<div class="wrap"><div class="ctaband rv">
+  <h2>Prêt à voir clair dans vos chiffres ?</h2>
+  <p>Créez votre espace en 2 minutes. Gratuit pendant 14 jours, sans carte bancaire.</p>
+  <div class="btns">
+    <a class="btn btn-a" data-link="app" target="_blank" rel="noopener" href="#">Démarrer l'essai gratuit</a>
+    <a class="btn btn-g" href="#telecharger">Voir les installations</a>
+  </div>
+</div></div>
+
 <section id="telecharger"><div class="wrap">
-  <span class="kicker">Accéder à Trezo</span>
-  <h2 class="h2">Choisissez votre mode d'installation.</h2>
+  <span class="kicker rv">Installer Trezo</span>
+  <h2 class="h2 rv d1">Choisissez votre mode d'installation.</h2>
+  <p class="lead rv d2" id="os-line">Sur cet appareil, nous vous recommandons : <span id="os-hint">…</span></p>
   <div class="dl-cards">
-    <div class="dl">
-      <h3>Application web (recommandé)</h3>
-      <p>Ouvrez le lien, ajoutez Trezo à votre écran d'accueil et lancez l'essai gratuit de 14 jours. Fonctionne sur téléphone, tablette et ordinateur.</p>
-      <!-- TODO-APP : remplacez # par l'adresse de votre application Trezo Cloud -->
-      <a class="btn btn-a" href="#" >Ouvrir Trezo</a>
+    <div class="dl rv">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3.5 12h17M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></div>
+      <h3>Application web</h3>
+      <p>Ouvrez Trezo dans votre navigateur et ajoutez-le à l'écran d'accueil : il se comporte ensuite comme une application installée, sur téléphone comme sur ordinateur.</p>
+      <a class="btn btn-a" data-link="app" target="_blank" rel="noopener" href="#">Ouvrir Trezo</a>
+      <span class="note">Recommandé — mises à jour automatiques</span>
     </div>
-    <div class="dl">
+    <div class="dl rv d1">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
       <h3>Windows (.exe)</h3>
-      <p>Un installateur classique : icône sur le Bureau, raccourci dans le menu Démarrer, expérience de logiciel installé.</p>
-      <!-- TODO-EXE : remplacez # par le lien de téléchargement de Trezo-setup.exe -->
-      <a class="btn btn-o" href="#" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)">Télécharger pour Windows</a>
+      <p>Un installateur classique : icône sur le Bureau, entrée dans le menu Démarrer, fonctionnement 100 % hors ligne. Windows 10 ou 11.</p>
+      <a class="btn btn-p" data-link="exe" href="#" id="btn-exe">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+        Télécharger pour Windows</a>
+      <span class="note" id="exe-note">Le téléchargement démarre immédiatement</span>
     </div>
-    <div class="dl">
+    <div class="dl rv d2">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg></div>
       <h3>Déjà client ?</h3>
-      <p>Connectez-vous à votre espace ou entrez votre clé de renouvellement dans Réglages → Licence.</p>
-      <!-- TODO-APP : même adresse que ci-dessus -->
-      <a class="btn btn-o" href="#" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)">Me connecter</a>
+      <p>Connectez-vous à votre espace, ou entrez votre clé de renouvellement dans Réglages → Licence.</p>
+      <a class="btn btn-o" data-link="app" target="_blank" rel="noopener" href="#">Me connecter</a>
+      <span class="note">Vos données vous attendent</span>
     </div>
   </div>
 </div></section>
 
 <section id="contact" style="padding-top:0"><div class="wrap">
-  <span class="kicker">Contact</span>
-  <h2 class="h2">Parlons de votre entreprise.</h2>
-  <div class="contact-box">
+  <span class="kicker rv">Contact</span>
+  <h2 class="h2 rv d1">Parlons de votre entreprise.</h2>
+  <div class="contact-box rv d2">
     <div>
-      <h3 style="font-family:'Manrope';font-weight:800;margin-bottom:.3rem">Une question ? Une licence ?</h3>
-      <p style="color:var(--gris);font-size:.95rem">Réponse rapide par WhatsApp, du lundi au samedi.</p>
+      <h3 style="font-weight:800;font-size:1.15rem;margin-bottom:.3rem">Une question ? Une licence ? Une démonstration ?</h3>
+      <p style="color:var(--mut);font-size:.95rem">Réponse rapide par WhatsApp, du lundi au samedi.</p>
     </div>
-    <div class="btns">
-      <!-- TODO-WA : remplacez 221XXXXXXXXX par votre numéro WhatsApp -->
-      <a class="btn btn-p" href="https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20souhaite%20des%20informations%20sur%20Trezo">WhatsApp</a>
-      <!-- TODO-MAIL : remplacez l'adresse e-mail -->
-      <a class="btn btn-o" href="mailto:contact@votredomaine.com?subject=Demande%20d%27informations%20Trezo">E-mail</a>
+    <div style="display:flex;gap:.9rem;flex-wrap:wrap">
+      <a class="btn btn-p" data-link="wa" target="_blank" rel="noopener" href="#">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.5 14.2c-.24.66-1.38 1.26-1.9 1.3-.5.05-1.13.24-3.8-.8-3.2-1.26-5.24-4.5-5.4-4.7-.16-.21-1.3-1.72-1.3-3.28 0-1.56.82-2.32 1.1-2.64.3-.32.64-.4.85-.4h.61c.2 0 .46-.04.71.55.26.6.87 2.1.95 2.25.08.16.13.35.02.56-.1.21-.16.34-.31.53-.16.18-.33.41-.47.55-.16.15-.32.32-.14.63.18.32.8 1.31 1.72 2.13 1.18 1.05 2.17 1.38 2.48 1.53.31.16.5.13.68-.08.18-.2.78-.9.99-1.21.2-.32.41-.26.69-.16.28.11 1.8.85 2.1 1 .31.16.51.24.59.37.07.13.07.76-.17 1.42z"/></svg>
+        WhatsApp</a>
+      <a class="btn btn-o" data-link="mail" href="#">E-mail</a>
     </div>
   </div>
 </div></section>
 
 <footer><div class="wrap">
-  <div style="display:flex;align-items:center;gap:.5rem;font-weight:800;color:#fff">
-    <svg viewBox="0 0 192 192" width="26" style="border-radius:7px"><rect width="192" height="192" rx="42" fill="#0E5A45"/><rect x="46" y="104" width="22" height="42" rx="6" fill="#F2B33D"/><rect x="78" y="84" width="22" height="62" rx="6" fill="#7FC8A9"/><rect x="110" y="58" width="22" height="88" rx="6" fill="#fff"/><rect x="38" y="36" width="116" height="16" rx="6" fill="#fff"/></svg>
-    Trezo — La trésorerie de votre PME, simplifiée.
+  <div style="display:flex;align-items:center;gap:.55rem;font-weight:800;color:#fff">
+    <svg viewBox="0 0 192 192" width="28" style="border-radius:8px"><rect width="192" height="192" rx="42" fill="#0E5A45"/><rect x="46" y="104" width="22" height="42" rx="6" fill="#F2B33D"/><rect x="78" y="84" width="22" height="62" rx="6" fill="#7FC8A9"/><rect x="110" y="58" width="22" height="88" rx="6" fill="#fff"/><rect x="38" y="36" width="116" height="16" rx="6" fill="#fff"/></svg>
+    Trezo — vos chiffres au clair.
   </div>
   <div>
-    <a href="#fonctionnalites">Fonctionnalités</a> · <a href="#tarifs">Tarifs</a> · <a href="#faq">FAQ</a> · <a href="#contact">Contact</a>
+    <a href="#produit">Produit</a> · <a href="#tarifs">Tarifs</a> · <a href="#licences">Licences</a> · <a href="#faq">FAQ</a> · <a href="#contact">Contact</a>
   </div>
 </div></footer>
 
+<script>
+(function(){
+  var L = window.LIENS || {};
+  /* Remplissage automatique de tous les liens depuis la configuration */
+  var urls = {
+    app: L.app || '#',
+    exe: L.exe || '#',
+    wa:  L.wa ? ('https://wa.me/' + L.wa + '?text=' + encodeURIComponent('Bonjour, je souhaite des informations sur Trezo')) : '#',
+    mail:L.mail ? ('mailto:' + L.mail + '?subject=' + encodeURIComponent('Demande d\u2019informations Trezo')) : '#'
+  };
+  document.querySelectorAll('[data-link]').forEach(function(a){
+    var k = a.getAttribute('data-link');
+    a.href = urls[k] || '#';
+    if(k === 'exe'){ a.setAttribute('download',''); }
+  });
+  if((urls.app === '#' ) && document.getElementById('exe-note')){
+    document.getElementById('exe-note').textContent = 'Configuration requise : renseignez window.LIENS en haut du fichier';
+  }
+  /* Détection du système pour la recommandation */
+  var hint = document.getElementById('os-hint');
+  if(hint){
+    var ua = navigator.userAgent;
+    if(/Windows/i.test(ua)) hint.textContent = 'la version Windows (.exe) ou l\u2019application web.';
+    else if(/Android|iPhone|iPad/i.test(ua)) hint.textContent = 'l\u2019application web, à ajouter à votre écran d\u2019accueil.';
+    else hint.textContent = 'l\u2019application web, installable depuis votre navigateur.';
+  }
+  /* Vidéo : chargement à la demande */
+  var poster = document.getElementById('vposter');
+  if(poster){
+    poster.addEventListener('click', function(){
+      if(L.video && L.video.length > 5){
+        var f = document.getElementById('viframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/' + L.video + '?autoplay=1&rel=0';
+        f.style.display = 'block';
+        poster.style.display = 'none';
+      }else{
+        document.getElementById('vhint').textContent = 'Vidéo bientôt disponible — ajoutez l\u2019ID YouTube dans window.LIENS.video';
+      }
+    });
+  }
+  /* Ombre de la navigation au défilement */
+  var nav = document.getElementById('nav');
+  window.addEventListener('scroll', function(){ nav.classList.toggle('scr', window.scrollY > 12); }, {passive:true});
+  /* Apparition au défilement */
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:.12, rootMargin:'0px 0px -6% 0px'});
+    document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  }else{
+    document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
 </body>
 </html>
