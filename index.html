@@ -25,11 +25,12 @@
    mail  : votre adresse e-mail de contact
 ================================================================ */
 window.LIENS = {
-  app:   "https://trezo-cloud.pages.dev/",
-  exe:   "https://trezo-releases.pages.dev/",
+  app:   "https://trezo-sn.pages.dev/",
+  classique: "",  // (optionnel) URL de la PWA Trezo Classique hors ligne — laissez "" pour ne proposer que le .exe
+  exe:   "https://github.com/Usmanhamza01/trezo-releases/releases/download/V2.4/Trezo_2.0.0_x64-setup.exe",
   video: "",
-  wa:    "221XXXXXXXXX",
-  mail:  "contact@votredomaine.com"
+  wa:    "221709888109",
+  mail:  "trezosn@gmail.com"
 };
 </script>
 
@@ -276,6 +277,22 @@ footer{background:var(--ink);color:rgba(255,255,255,.66);padding:3rem 0 2.4rem;f
 footer .wrap{display:flex;justify-content:space-between;gap:1.4rem;flex-wrap:wrap;align-items:center}
 footer a{color:rgba(255,255,255,.85);text-decoration:none}
 footer a:hover{color:var(--amber)}
+.offmodal{position:fixed;inset:0;background:rgba(16,32,27,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:90;padding:1rem}
+.offmodal.on{display:flex}
+.offbox{background:#fff;border-radius:20px;padding:1.8rem;max-width:480px;width:100%;position:relative;box-shadow:0 40px 90px -20px rgba(0,0,0,.4)}
+.offclose{position:absolute;top:.7rem;right:1rem;border:none;background:none;font-size:1.7rem;cursor:pointer;color:var(--mut);line-height:1}
+.off-opt{display:block;border:1.5px solid var(--line);border-radius:14px;padding:1rem 1.1rem;text-decoration:none;margin-bottom:.7rem;transition:border .2s,transform .2s}
+.off-opt:hover{border-color:var(--green);transform:translateY(-2px)}
+.off-opt b{display:block;font-size:1rem}
+.off-opt span{font-size:.85rem;color:var(--mut)}
+.off-note{font-size:.78rem;color:var(--mut);background:var(--paper);border-radius:10px;padding:.6rem .8rem;margin:.2rem 0}
+.cmp{margin-top:2.6rem;overflow-x:auto;border-radius:16px}
+.cmp table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);min-width:560px}
+.cmp th,.cmp td{padding:.75rem 1rem;border-bottom:1px solid var(--line-2);font-size:.9rem;text-align:left}
+.cmp th{background:var(--ink);color:#fff;font-size:.82rem;letter-spacing:.02em}
+.cmp td:nth-child(2),.cmp td:nth-child(3),.cmp th:nth-child(2),.cmp th:nth-child(3){text-align:center}
+.cmp .y{color:var(--green);font-weight:800}
+.cmp .n{color:#B9B2A3}
 </style>
 </head>
 <body>
@@ -498,28 +515,42 @@ footer a:hover{color:var(--amber)}
       <div class="price">45 000 FCFA</div>
       <div class="per">par an et par entreprise</div>
       <ul>
-        <li>Synchronisation sur tous vos appareils</li>
-        <li>Sauvegarde automatique permanente</li>
-        <li>Licence infalsifiable, vérifiée sur serveur</li>
-        <li>Multi-utilisateurs avec droits d’accès par module</li>
-        <li>Téléphone perdu = zéro donnée perdue</li>
+        <li><b>Tout Trezo Classique</b>, et en plus :</li>
+        <li>Sauvegarde automatique et sécurisée sur le cloud</li>
+        <li>Multi-utilisateurs avec droits d’accès personnalisés</li>
+        <li>Synchronisation en temps réel sur tous vos appareils</li>
+        <li>Journal d’audit et traçabilité complète</li>
+        <li>Aide à la décision : objectifs, indicateurs, analyses</li>
       </ul>
-      <a class="btn btn-p" href="#contact">Obtenir ma licence</a>
+      <button class="btn btn-p" style="width:100%" onclick="chooseOffer('cloud')">Choisir Cloud</button>
     </div>
     <div class="plan rv d2">
-      <h3>Trezo Classique</h3>
+      <h3>Trezo Classique <span style="font-size:.7rem;color:var(--mut);font-weight:800;letter-spacing:.06em">MONOPOSTE</span></h3>
       <!-- TODO-PRIX : votre tarif Classique -->
       <div class="price">25 000 FCFA</div>
       <div class="per">par an et par entreprise</div>
       <ul>
-        <li>100 % hors ligne après installation</li>
-        <li>Données uniquement sur votre appareil</li>
-        <li>Confidentialité maximale</li>
-        <li>Version Windows (.exe) incluse</li>
-        <li class="no">Synchronisation multi-appareils</li>
+        <li>Installation locale sur un seul ordinateur</li>
+        <li>Profils utilisateurs locaux, sur un seul poste</li>
+        <li>Données stockées localement — confidentialité maximale</li>
+        <li>Fonctionnalités essentielles de gestion</li>
+        <li class="no">Sauvegarde cloud &amp; multi-utilisateurs</li>
       </ul>
-      <a class="btn btn-o" href="#contact">Obtenir ma licence</a>
+      <button class="btn btn-o" style="width:100%" onclick="chooseOffer('classique')">Choisir Classique</button>
     </div>
+  </div>
+  <div class="cmp rv">
+   <table>
+    <tr><th>Fonctionnalités</th><th>Classique</th><th>Cloud</th></tr>
+    <tr><td>Trésorerie, stocks, salaires, facturation, clients, rapports</td><td class="y">✓</td><td class="y">✓</td></tr>
+    <tr><td>Fonctionne 100 % hors ligne</td><td class="y">✓</td><td class="n">Internet requis</td></tr>
+    <tr><td>Utilisateurs</td><td>Profils locaux avec droits (1 poste)</td><td class="y">Multi-comptes avec droits, tous appareils</td></tr>
+    <tr><td>Appareils</td><td>1 ordinateur</td><td class="y">Téléphone + ordinateur, synchronisés</td></tr>
+    <tr><td>Sauvegarde des données</td><td>Locale (manuelle)</td><td class="y">Automatique et sécurisée</td></tr>
+    <tr><td>Synchronisation en temps réel</td><td class="n">—</td><td class="y">✓</td></tr>
+    <tr><td>Journal d’audit &amp; traçabilité</td><td class="n">—</td><td class="y">✓</td></tr>
+    <tr><td>Aide à la décision (objectifs auto, projections, indicateurs)</td><td class="n">—</td><td class="y">✓</td></tr>
+   </table>
   </div>
 </div></section>
 
@@ -552,7 +583,7 @@ footer a:hover{color:var(--amber)}
     <details class="rv d1"><summary>Trezo gère-t-il ma devise ?</summary><p>19 devises : FCFA (UEMOA et CEMAC), dirham, dinar, naira, cedi, shilling, franc guinéen, ouguiya, rand, euro, dollar et d'autres. Vous choisissez la vôtre à l'installation.</p></details>
     <details class="rv"><summary>Puis-je passer de Classique à Cloud ?</summary><p>Oui, en quelques minutes : exportez la sauvegarde depuis votre installation Classique, importez-la dans votre espace Cloud — flux, stocks, factures, tout est repris.</p></details>
     <details class="rv d1"><summary>Y a-t-il une assistance ?</summary><p>L'application se prend en main sans formation. Pour toute question, l'assistance se fait par WhatsApp — réponse dans la journée ouvrée.</p></details>
-    <details class="rv"><summary>Puis-je donner des accès à mes employés ?</summary><p>Oui, avec Trezo Cloud. Vous invitez chaque collaborateur par un code : il crée son propre compte, et vous choisissez ses droits module par module (aucun accès, lecture seule, création, écriture ou total). Chaque action est tracée dans le journal d’audit avec l’auteur, la date et l’heure.</p></details>
+    <details class="rv"><summary>Puis-je donner des accès à mes employés ?</summary><p>Oui, sur les deux versions. Sur Trezo Cloud, l’administrateur crée directement le compte de chaque collaborateur (e-mail, mot de passe initial, rôle) — ou l’invite par code — avec des droits réglables module par module, et chaque action est tracée dans le journal d’audit. Sur Trezo Classique, des profils locaux avec droits sont disponibles sur le poste, pour l’équipe qui partage l’ordinateur.</p></details>
   </div>
 </div></section>
 
@@ -575,12 +606,12 @@ footer a:hover{color:var(--amber)}
       <h3>Application web</h3>
       <p>Ouvrez Trezo dans votre navigateur et ajoutez-le à l'écran d'accueil : il se comporte ensuite comme une application installée, sur téléphone comme sur ordinateur.</p>
       <a class="btn btn-a" data-link="app" target="_blank" rel="noopener" href="#">Ouvrir Trezo</a>
-      <span class="note">Recommandé — mises à jour automatiques</span>
+      <span class="note">Pour Trezo Cloud et l’essai gratuit — mises à jour automatiques</span>
     </div>
     <div class="dl rv d1">
       <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
       <h3>Windows (.exe)</h3>
-      <p>Un installateur classique : icône sur le Bureau, entrée dans le menu Démarrer, fonctionnement 100 % hors ligne. Windows 10 ou 11.</p>
+      <p>Pour Trezo Classique (monoposte) : icône sur le Bureau, menu Démarrer, fonctionnement 100 % hors ligne. Windows 10 ou 11.</p>
       <a class="btn btn-p" data-link="exe" href="#" id="btn-exe">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
         Télécharger pour Windows</a>
@@ -623,6 +654,12 @@ footer a:hover{color:var(--amber)}
   </div>
 </div></footer>
 
+<div class="offmodal" id="offmodal"><div class="offbox">
+  <button class="offclose" onclick="closeOffer()">×</button>
+  <h3 id="off-title" style="font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.3rem;margin-bottom:1rem;padding-right:1.5rem">Choisissez votre installation</h3>
+  <div id="off-opts"></div>
+</div></div>
+
 <script>
 (function(){
   var L = window.LIENS || {};
@@ -641,6 +678,26 @@ footer a:hover{color:var(--amber)}
   if((urls.app === '#' ) && document.getElementById('exe-note')){
     document.getElementById('exe-note').textContent = 'Configuration requise : renseignez window.LIENS en haut du fichier';
   }
+  /* Parcours d'achat : choix du mode d'installation par formule */
+  var om=document.getElementById('offmodal');
+  window.closeOffer=function(){om.classList.remove('on');};
+  window.chooseOffer=function(kind){
+    var wrap=document.getElementById('off-opts');
+    var waBtn='<a class="btn btn-p" style="width:100%;margin-top:.5rem" target="_blank" rel="noopener" href="'+urls.wa+'">Obtenir ma licence par WhatsApp</a>';
+    if(kind==='cloud'){
+      document.getElementById('off-title').textContent='Trezo Cloud — votre installation';
+      wrap.innerHTML='<a class="off-opt" target="_blank" rel="noopener" href="'+urls.app+'"><b>Application web (PWA)</b><span>Téléphone, tablette et ordinateur — synchronisée en temps réel, mises à jour automatiques.</span></a>'
+        +'<div class="off-note">La version Cloud s\u2019utilise via l\u2019application web : aucun installateur n\u2019est nécessaire, vos données vous suivent sur tous vos appareils.</div>'+waBtn;
+    }else{
+      document.getElementById('off-title').textContent='Trezo Classique — votre installation';
+      var o='<a class="off-opt" href="'+urls.exe+'" download><b>Windows (.exe)</b><span>Installation locale sur votre ordinateur — 100 % hors ligne. Recommandé.</span></a>';
+      if(L.classique && L.classique.length>4){o+='<a class="off-opt" target="_blank" rel="noopener" href="'+L.classique+'"><b>Application web hors ligne (PWA)</b><span>Pour téléphone, Mac ou Linux — données stockées sur l\u2019appareil.</span></a>';}
+      wrap.innerHTML=o+'<div class="off-note">Monoposte : un seul utilisateur, données stockées localement, sans sauvegarde cloud ni synchronisation.</div>'+waBtn;
+    }
+    om.classList.add('on');
+  };
+  om.addEventListener('click',function(e){if(e.target===om)window.closeOffer();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')window.closeOffer();});
   /* Détection du système pour la recommandation */
   var hint = document.getElementById('os-hint');
   if(hint){
