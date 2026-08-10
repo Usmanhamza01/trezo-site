@@ -291,6 +291,40 @@ footer.ft{padding:52px 0;border-top:1px solid var(--ligne);color:var(--brume);fo
 .video-ph:hover .play{background:rgba(255,255,255,.22);transform:scale(1.05)}
 .video-ph .t{font-family:'Cormorant',serif;font-size:1.5rem}
 .video-ph .s{font-size:.85rem;color:rgba(255,255,255,.8);max-width:36ch}
+
+/* ---- deux vidéos ---- */
+.video-duo{display:grid;grid-template-columns:1fr 1fr;gap:26px;max-width:1080px;margin:0 auto}
+.video-item .vi-label{display:flex;align-items:center;gap:.6rem;margin-bottom:12px;font-size:.82rem;font-weight:700;letter-spacing:.04em;color:var(--ink-soft)}
+.video-item .vi-label .dot{width:8px;height:8px;border-radius:50%;background:var(--emeraude)}
+.video-item.soon .vi-label .dot{background:var(--or)}
+.vframe{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--ligne);box-shadow:0 30px 70px -46px rgba(27,38,32,.5);background:#0A1712;aspect-ratio:16/9}
+.vframe iframe,.vframe video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vframe .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  background:linear-gradient(135deg,var(--vert-d),var(--vert));color:#fff;text-align:center;padding:24px}
+.vframe .ph .play{width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.14);border:1.5px solid var(--or-clair);display:grid;place-items:center}
+.vframe .ph .play svg{width:24px;height:24px;fill:var(--or-clair);margin-left:3px}
+.vframe .ph .t{font-family:'Cormorant',serif;font-size:1.3rem}
+.vframe .ph .s{font-size:.8rem;color:rgba(255,255,255,.78);max-width:32ch}
+.vframe .ph .tag{position:absolute;top:14px;left:14px;font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:rgba(217,164,65,.9);color:#2A1D06;padding:3px 10px;border-radius:20px}
+@media(max-width:820px){.video-duo{grid-template-columns:1fr;gap:22px}}
+
+/* ---- démo animée dans le héro ---- */
+.hero-demo{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--ligne);
+  box-shadow:0 40px 90px -50px rgba(27,38,32,.5);background:#0A1712;aspect-ratio:16/9}
+.hero-demo iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.hero-demo .rec{position:absolute;top:12px;right:12px;z-index:5;display:flex;align-items:center;gap:6px;
+  background:rgba(10,23,18,.7);backdrop-filter:blur(6px);padding:5px 12px;border-radius:20px;font-size:.68rem;font-weight:700;letter-spacing:.06em;color:#fff}
+.hero-demo .rec .d{width:7px;height:7px;border-radius:50%;background:var(--emeraude);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ---- bande de confiance ---- */
+.trust{border-top:1px solid var(--ligne);border-bottom:1px solid var(--ligne);background:var(--paper-2)}
+.trust-in{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.trust-in .ti{padding:30px 20px;text-align:center;border-right:1px solid var(--ligne)}
+.trust-in .ti:last-child{border-right:0}
+.trust-in .n{font-family:'Cormorant',serif;font-size:2.4rem;font-weight:700;color:var(--vert);line-height:1}
+.trust-in .l{font-size:.82rem;color:var(--ink-soft);margin-top:6px;letter-spacing:.02em}
+@media(max-width:760px){.trust-in{grid-template-columns:1fr 1fr}.trust-in .ti:nth-child(2){border-right:0}.trust-in .ti{border-bottom:1px solid var(--ligne)}}
 </style>
 </head>
 <body>
@@ -385,23 +419,47 @@ footer.ft{padding:52px 0;border-top:1px solid var(--ligne);color:var(--brume);fo
   </div>
 </section>
 
-<!-- VIDÉO DÉMO -->
+<!-- BANDE DE CONFIANCE -->
+<section class="trust" style="padding:0">
+  <div class="wrap trust-in reveal">
+    <div class="ti"><div class="n">3</div><div class="l">éditions, un seul socle</div></div>
+    <div class="ti"><div class="n">100 %</div><div class="l">en FCFA · SYSCOHADA</div></div>
+    <div class="ti"><div class="n">0</div><div class="l">connexion requise (hors ligne)</div></div>
+    <div class="ti"><div class="n">∞</div><div class="l">factures & clients illimités</div></div>
+  </div>
+</section>
+
+<!-- VIDÉOS -->
 <section id="demo" class="video-sec">
   <div class="wrap">
     <div class="video-head reveal">
-      <div class="eyebrow">En 90 secondes</div>
+      <div class="eyebrow">En images</div>
       <h2>Voyez Trezo en action.</h2>
-      <p>Une démonstration rapide des trois éditions — de la vente à la facture, du devis à l'encaissement.</p>
+      <p>Une démonstration animée des trois éditions, et bientôt un film de présentation complet.</p>
     </div>
-    <div class="video-frame reveal">
-      <!-- Quand la vidéo sera prête : remplacez ce bloc .video-ph par
-           <video controls poster="apercu.jpg"><source src="demo-trezo.mp4" type="video/mp4"></video>
-           ou une <iframe> YouTube/Vimeo. -->
-      <a class="video-ph" data-link="wa" aria-label="Voir la démo">
-        <span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-        <span class="t">Démonstration Trezo</span>
-        <span class="s">La vidéo arrive bientôt — contactez-nous pour une démo en direct.</span>
-      </a>
+    <div class="video-duo reveal">
+      <div class="video-item">
+        <div class="vi-label"><span class="dot"></span>Démo animée — les 3 éditions</div>
+        <div class="vframe">
+          <!-- La démo animée. En LOCAL (file://), l'iframe peut être bloquée par
+               le navigateur : c'est normal, elle s'affichera une fois le site EN LIGNE.
+               Pour tester en local, utilisez un petit serveur (ex. "npx serve"). -->
+          <iframe src="demo-hero.html" title="Démonstration animée Trezo" loading="lazy"></iframe>
+        </div>
+      </div>
+      <div class="video-item soon">
+        <div class="vi-label"><span class="dot"></span>Vidéo de présentation — bientôt</div>
+        <div class="vframe">
+          <!-- EMPLACEMENT VIDÉO PUB — remplacez ce bloc .ph par votre <iframe> YouTube
+               ou <video controls><source src="..."></video> quand la vidéo sera prête. -->
+          <a class="ph" data-link="wa" aria-label="Vidéo de présentation à venir">
+            <span class="tag">Bientôt</span>
+            <span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="t">Vidéo de présentation</span>
+            <span class="s">Notre film de présentation arrive prochainement. Contactez-nous pour une démo en direct.</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
