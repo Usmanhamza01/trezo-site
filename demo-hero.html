@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trezo — Démo animée</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,600;0,700;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --nuit:#0A1712; --nuit2:#0F241C; --craie:#F3EFE4; --craie-s:#C7CBBF; --brume:#8B978C;
+  --or:#C9A24B; --or-c:#E4C77A; --emeraude:#2E9B72; --cuivre:#C98A5E; --acier:#7C9AB8;
+  --vert:#0E5A45; --card:#FFFFFF; --ink:#1B2620; --line:#E7DFCE; --vert-wash:#E9F1EC;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:transparent;font-family:'Manrope',sans-serif;overflow:hidden}
+.stage{position:relative;width:1280px;height:720px;margin:0 auto;overflow:hidden;color:var(--craie);
+  background:
+   radial-gradient(60vw 40vw at 80% -10%,rgba(46,155,114,.16),transparent 60%),
+   radial-gradient(50vw 35vw at 5% 10%,rgba(201,162,75,.10),transparent 55%),
+   var(--nuit);}
+
+/* particules d'ambiance */
+.orb{position:absolute;border-radius:50%;filter:blur(1px);opacity:.5;animation:float 8s ease-in-out infinite}
+.orb.a{width:8px;height:8px;background:var(--or-c);top:18%;left:12%;animation-delay:0s}
+.orb.b{width:6px;height:6px;background:var(--emeraude);top:70%;left:20%;animation-delay:1.2s}
+.orb.c{width:10px;height:10px;background:var(--acier);top:30%;right:14%;animation-delay:2.1s}
+.orb.d{width:5px;height:5px;background:var(--cuivre);bottom:20%;right:22%;animation-delay:.6s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+
+/* barre de progression */
+.prog{position:absolute;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--or),var(--or-c));z-index:60}
+
+/* curseur animé */
+.cursor{position:absolute;z-index:80;width:26px;height:26px;pointer-events:none;left:640px;top:360px;
+  transition:left .8s cubic-bezier(.5,.05,.3,1),top .8s cubic-bezier(.5,.05,.3,1);filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
+.cursor svg{width:100%;height:100%}
+.cursor .ring{position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--or-c);opacity:0;transform:scale(.4)}
+.cursor.click .ring{animation:clickring .5s ease-out}
+@keyframes clickring{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(1.8)}}
+
+/* légendes */
+.caption{position:absolute;left:0;right:0;bottom:54px;text-align:center;z-index:40;opacity:0;transition:.5s}
+.caption.on{opacity:1}
+.caption .big{font-family:'Cormorant',serif;font-size:38px;font-weight:700;text-shadow:0 2px 18px rgba(0,0,0,.5)}
+.caption .small{font-size:16px;color:var(--craie-s);margin-top:4px;letter-spacing:.02em}
+.voxband{position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.35));z-index:30;display:flex;align-items:center;justify-content:center}
+.voxband span{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.32)}
+
+/* device */
+.device{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%) scale(.94);z-index:20;
+  width:780px;background:var(--card);color:var(--ink);border-radius:18px;overflow:hidden;
+  box-shadow:0 50px 120px -40px rgba(0,0,0,.8);opacity:0;transition:.6s cubic-bezier(.2,.8,.2,1)}
+.device.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.dev-bar{display:flex;align-items:center;gap:8px;padding:14px 20px;border-bottom:1px solid var(--line);background:#FBF8F1}
+.dev-bar i{width:11px;height:11px;border-radius:50%}
+.dev-bar .g{background:var(--emeraude)}.dev-bar .o{background:var(--cuivre)}.dev-bar .y{background:var(--or)}
+.dev-bar .title{margin-left:8px;font-family:'Cormorant',serif;font-weight:700;font-size:19px;transition:.4s}
+.dev-bar .title.c{color:var(--vert)}.dev-bar .title.s{color:#9A4E3B}
+.dev-bar .badge{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.08em;padding:3px 10px;border-radius:20px;text-transform:uppercase;transition:.4s}
+.dev-bar .badge.c{background:var(--vert-wash);color:var(--emeraude)}
+.dev-bar .badge.s{background:#F6E9E2;color:var(--cuivre)}
+.dev-body{padding:24px 28px;min-height:344px;position:relative}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:15px 16px;position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:0;background:currentColor;opacity:.3;transition:width 1s}
+.kpi.grow::after{width:100%}
+.kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--brume);font-weight:800}
+.kpi .v{font-family:'Cormorant',serif;font-size:30px;font-weight:700;margin-top:3px}
+.kpi.k1{color:var(--emeraude)} .kpi.k1 .v{color:var(--emeraude)}
+.kpi.k2{color:var(--cuivre)} .kpi.k2 .v{color:var(--cuivre)}
+.kpi.k3{color:var(--acier)} .kpi.k3 .v{color:var(--acier)}
+.kpi .s{font-size:12px;color:var(--brume);margin-top:1px}
+.kpi .trend{position:absolute;top:14px;right:14px;font-size:11px;font-weight:800;color:var(--emeraude);opacity:0;transform:translateY(-4px);transition:.5s}
+.kpi .trend.on{opacity:1;transform:none}
+
+/* chart barres */
+.chart .ct{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--brume);font-weight:800;margin-bottom:10px}
+.bars{display:flex;align-items:flex-end;gap:12px;height:118px}
+.bars .b{flex:1;border-radius:5px 5px 0 0;transform:scaleY(0);transform-origin:bottom;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.bars .b.up{transform:scaleY(1)}
+
+/* lignes facture / listes */
+.rowline{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);font-size:16px;opacity:0;transform:translateX(-10px);transition:.5s}
+.rowline.on{opacity:1;transform:none}
+.rowline .tag{font-size:11px;font-weight:800;padding:2px 8px;border-radius:12px;background:var(--vert-wash);color:var(--emeraude);margin-left:8px}
+.totbox{margin-top:14px;margin-left:auto;width:58%}
+.totbox .r{display:flex;justify-content:space-between;padding:4px 0;color:#5b5b4b;font-size:15px}
+.totbox .r.big{color:#fff;border-radius:8px;padding:10px 14px;margin-top:8px;font-weight:800;font-size:17px;transform:scale(.9);opacity:0;transition:.5s}
+.totbox .r.big.show{transform:scale(1);opacity:1}
+.totbox .r.big.c{background:var(--vert)}.totbox .r.big.s{background:#9A4E3B}
+
+/* bouton simulé */
+.simbtn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,var(--or-c),var(--or));color:#2A1D06;font-weight:800;font-size:15px;padding:12px 22px;border-radius:8px;box-shadow:0 10px 24px -12px rgba(192,138,46,.6);transition:.2s}
+.simbtn.press{transform:scale(.95)}
+.simbtn.green{background:var(--vert);color:#fff}
+
+/* devis -> facture */
+.pillrow{display:flex;align-items:center;gap:16px;margin:18px 0}
+.pill{border:1px solid var(--line);border-radius:10px;padding:12px 18px;font-weight:700;font-size:15px}
+.pill.from{color:var(--brume)}
+.pill.to{color:#9A4E3B;border-color:#E7C9BC;background:#FBF2EC;opacity:0;transform:translateX(-10px);transition:.5s}
+.pill.to.on{opacity:1;transform:none}
+.arrow{color:var(--or);font-size:22px;opacity:0;transition:.4s}
+.arrow.on{opacity:1}
+
+/* business bascule */
+.bizwrap{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:6px}
+.bizcol{flex:1;padding:22px 20px;transition:.5s}
+.bizcol h4{font-family:'Cormorant',serif;font-size:22px;margin-bottom:4px}
+.bizcol.c h4{color:var(--vert)} .bizcol.s h4{color:#9A4E3B}
+.bizcol .sub{font-size:13px;color:var(--brume)}
+.bizcol .mini{margin-top:12px;font-size:12px;color:var(--brume)}
+.bizcol.dim{opacity:.32;filter:grayscale(.5)}
+.switchbtn{display:flex;align-items:center;justify-content:center;width:66px;background:linear-gradient(180deg,var(--or-c),var(--or));color:#2A1D06;font-size:26px;font-weight:800;transition:.3s}
+.switchbtn.spin{transform:rotate(180deg)}
+
+/* module électronique */
+.devgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.devcard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;opacity:0;transform:translateY(10px);transition:.5s}
+.devcard.on{opacity:1;transform:none}
+.devcard .nm{font-weight:700;font-size:15px}
+.devcard .imei{font-size:11px;color:var(--brume);font-family:monospace;margin-top:2px}
+.devcard .pr{margin-top:8px;font-family:'Cormorant',serif;font-size:22px;font-weight:700;color:var(--vert)}
+.devcard .st{font-size:11px;font-weight:800;padding:2px 8px;border-radius:10px;display:inline-block;margin-top:4px}
+.devcard .st.stock{background:var(--vert-wash);color:var(--emeraude)}
+.devcard .st.sold{background:#F6E9E2;color:var(--cuivre)}
+
+/* notifications */
+.notif{position:absolute;right:20px;z-index:45;background:#fff;color:var(--ink);border-radius:12px;padding:12px 16px 12px 14px;
+  box-shadow:0 20px 50px -18px rgba(0,0,0,.4);display:flex;align-items:center;gap:12px;min-width:230px;
+  opacity:0;transform:translateX(40px);transition:.5s cubic-bezier(.2,.8,.2,1);border-left:3px solid var(--emeraude)}
+.notif.on{opacity:1;transform:none}
+.notif .ic{width:34px;height:34px;border-radius:50%;background:var(--vert-wash);display:grid;place-items:center;flex-shrink:0}
+.notif .ic svg{width:18px;height:18px;stroke:var(--emeraude);fill:none;stroke-width:2.4}
+.notif.gold{border-left-color:var(--or)} .notif.gold .ic{background:#FBF1DC} .notif.gold .ic svg{stroke:var(--or)}
+.notif.copper{border-left-color:var(--cuivre)} .notif.copper .ic{background:#F6E9E2} .notif.copper .ic svg{stroke:var(--cuivre)}
+.notif .tx b{display:block;font-size:14px;font-weight:800}
+.notif .tx span{font-size:12px;color:var(--brume)}
+
+/* toast central */
+.toast{position:absolute;top:20px;left:50%;transform:translateX(-50%) translateY(-14px);z-index:50;
+  background:var(--vert);color:#fff;padding:11px 22px;border-radius:30px;font-weight:700;font-size:15px;
+  box-shadow:0 16px 40px -14px rgba(0,0,0,.5);opacity:0;transition:.4s}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.gold{background:linear-gradient(180deg,var(--or-c),var(--or));color:#2A1D06}
+
+/* intro / outro */
+.titlecard{position:absolute;inset:0;z-index:55;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(60vw 40vw at 50% 30%,rgba(46,155,114,.18),transparent 60%),var(--nuit);opacity:0;transition:.7s;pointer-events:none;padding:40px}
+.titlecard.on{opacity:1}
+.brandmark{width:60px;height:60px;border:2px solid var(--or);border-radius:50%;display:grid;place-items:center;margin-bottom:20px;animation:pop .8s cubic-bezier(.2,1.4,.4,1)}
+.brandmark::after{content:"";width:18px;height:18px;background:var(--or);border-radius:50%}
+@keyframes pop{0%{transform:scale(0)}100%{transform:scale(1)}}
+.titlecard h1{font-family:'Cormorant',serif;font-weight:700;font-size:66px;line-height:1.05}
+.titlecard h1 em{font-style:italic;color:var(--or-c)}
+.titlecard .sub{color:var(--craie-s);font-size:19px;margin-top:12px;max-width:26ch}
+.titlecard .editions{margin-top:24px;display:flex;gap:16px;font-size:15px;letter-spacing:.05em}
+.titlecard .editions b{font-family:'Cormorant',serif;font-size:20px}
+.titlecard .cta{margin-top:26px;background:linear-gradient(180deg,var(--or-c),var(--or));color:#2A1D06;font-weight:800;padding:13px 28px;border-radius:6px;font-size:16px;animation:ctapulse 2s ease-in-out infinite}
+@keyframes ctapulse{0%,100%{box-shadow:0 0 0 0 rgba(217,164,65,.5)}50%{box-shadow:0 0 0 12px rgba(217,164,65,0)}}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--or);margin-bottom:12px}
+
+.startbtn{position:absolute;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;
+  background:radial-gradient(60vw 40vw at 50% 40%,rgba(46,155,114,.16),transparent 60%),var(--nuit);transition:.5s}
+.startbtn.hide{opacity:0;pointer-events:none}
+.startbtn .play{width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid var(--or-c);display:grid;place-items:center;transition:.25s}
+.startbtn .play svg{width:32px;height:32px;fill:var(--or-c);margin-left:5px}
+.startbtn:hover .play{transform:scale(1.06)}
+.startbtn .lab{font-family:'Cormorant',serif;font-size:26px;color:var(--craie)}
+.startbtn .hint{font-size:13px;color:var(--brume)}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="prog" id="prog"></div>
+  <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div><div class="orb d"></div>
+
+  <div class="startbtn hide" id="startbtn">
+    <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    <div class="lab">Démonstration Trezo</div>
+    <div class="hint">Cliquez pour lancer</div>
+  </div>
+
+  <div class="titlecard" id="intro">
+    <div class="brandmark"></div>
+    <h1>La gestion, <em>élevée</em><br>au rang d'art.</h1>
+    <div class="sub">La suite des commerçants et prestataires d'Afrique de l'Ouest.</div>
+  </div>
+
+  <div class="device" id="device">
+    <div class="dev-bar">
+      <i class="g"></i><i class="o"></i><i class="y"></i>
+      <span class="title c" id="devtitle">Trezo Commerce</span>
+      <span class="badge c" id="devbadge">Commerce</span>
+    </div>
+    <div class="dev-body" id="devbody"></div>
+  </div>
+
+  <!-- curseur -->
+  <div class="cursor" id="cursor">
+    <svg viewBox="0 0 24 24"><path d="M4 2l16 8-6.5 2.2L11 20 4 2z" fill="#F3EFE4" stroke="#0A1712" stroke-width="1.2"/></svg>
+    <span class="ring"></span>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="notif" id="notif" style="bottom:120px">
+    <div class="ic" id="notif-ic"></div><div class="tx"><b id="notif-t"></b><span id="notif-s"></span></div>
+  </div>
+
+  <div class="titlecard" id="outro">
+    <div class="brandmark"></div>
+    <h1>Trezo</h1>
+    <div class="editions"><b style="color:var(--emeraude)">Commerce</b> · <b style="color:var(--cuivre)">Services</b> · <b style="color:var(--acier)">Business</b></div>
+    <div class="sub">La gestion de votre entreprise, à la hauteur de vos ambitions.</div>
+    <div class="cta">Demander une démo</div>
+  </div>
+
+  <div class="caption" id="caption"><div class="big" id="capbig"></div><div class="small" id="capsmall"></div></div>
+  <div class="voxband"><span>Trezo — démonstration</span></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const stage=$('stage');
+const AUTO=true; // autoplay boucle pour le site
+
+function fit(){
+  const sx=window.innerWidth/1280, sy=window.innerHeight/720, s=Math.min(sx,sy,1);
+  stage.style.transform='scale('+s+')'; stage.style.position='absolute';
+  stage.style.left=(window.innerWidth-1280*s)/2+'px';
+  stage.style.top=(window.innerHeight-720*s)/2+'px';
+}
+window.addEventListener('resize',fit); fit();
+
+// ---- helpers animation ----
+function caption(big,small){ $('capbig').textContent=big; $('capsmall').textContent=small||''; $('caption').classList.add('on'); }
+function capOff(){ $('caption').classList.remove('on'); }
+function toast(t,gold){ const el=$('toast'); el.textContent=t; el.className='toast'+(gold?' gold':''); el.classList.add('on'); }
+function toastOff(){ $('toast').classList.remove('on'); }
+
+const ICONS={
+  check:'<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>',
+  bell:'<svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg>',
+  doc:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>',
+  cash:'<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>'
+};
+function notif(kind,title,sub,icon){
+  const n=$('notif'); n.className='notif '+(kind||'');
+  $('notif-ic').innerHTML=ICONS[icon||'check'];
+  $('notif-t').textContent=title; $('notif-s').textContent=sub||'';
+  requestAnimationFrame(()=>n.classList.add('on'));
+}
+function notifOff(){ $('notif').classList.remove('on'); }
+
+// curseur : déplacer vers une position (coordonnées stage) puis cliquer
+function moveCursor(x,y){ const c=$('cursor'); c.style.left=x+'px'; c.style.top=y+'px'; }
+async function clickAt(x,y){
+  moveCursor(x,y); await wait(820);
+  const c=$('cursor'); c.classList.add('click'); setTimeout(()=>c.classList.remove('click'),500);
+  await wait(240);
+}
+
+function setDevice(kind){
+  const t=$('devtitle'), b=$('devbadge');
+  if(kind==='commerce'){ t.textContent='Trezo Commerce'; t.className='title c'; b.textContent='Commerce'; b.className='badge c'; }
+  else { t.textContent='Trezo Services'; t.className='title s'; b.textContent='Services'; b.className='badge s'; }
+}
+function showDevice(){ $('device').classList.add('on'); }
+function hideDevice(){ $('device').classList.remove('on'); }
+
+function animateNumber(id,from,to,dur,fmtf){
+  const el=$(id); if(!el)return;
+  const t0=performance.now();
+  function step(t){ const k=Math.min(1,(t-t0)/dur); const e=1-Math.pow(1-k,3);
+    el.textContent=fmtf(from+(to-from)*e); if(k<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+const fmt=n=>Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+
+// ================= SCÈNES =================
+async function sceneIntro(){
+  $('intro').classList.add('on');
+  await wait(2400); $('intro').classList.remove('on'); await wait(600);
+}
+
+async function sceneCommerceDash(){
+  setDevice('commerce');
+  $('devbody').innerHTML=`
+    <div class="kpis">
+      <div class="kpi k1" id="kp1"><div class="l">Encaissé</div><div class="v" id="c-v1">0</div><div class="s">aujourd'hui</div><div class="trend" id="tr1">▲ 12%</div></div>
+      <div class="kpi k2" id="kp2"><div class="l">À encaisser</div><div class="v" id="c-v2">0</div><div class="s">4 factures</div></div>
+      <div class="kpi k3" id="kp3"><div class="l">Trésorerie</div><div class="v" id="c-v3">0</div><div class="s">solde net</div></div>
+    </div>
+    <div class="chart">
+      <div class="ct">Entrées — 6 derniers mois</div>
+      <div class="bars">
+        <div class="b" id="b1" style="height:45%;background:var(--emeraude)"></div>
+        <div class="b" id="b2" style="height:62%;background:var(--emeraude)"></div>
+        <div class="b" id="b3" style="height:52%;background:var(--cuivre)"></div>
+        <div class="b" id="b4" style="height:78%;background:var(--cuivre)"></div>
+        <div class="b" id="b5" style="height:68%;background:var(--acier)"></div>
+        <div class="b" id="b6" style="height:94%;background:var(--or)"></div>
+      </div>
+    </div>`;
+  showDevice(); await wait(400);
+  caption("Votre activité en un coup d'œil","Édition Commerce — tableau de bord");
+  await wait(500);
+  animateNumber('c-v1',0,2450000,1100,fmt);
+  animateNumber('c-v2',0,680000,1100,fmt);
+  animateNumber('c-v3',0,1770000,1100,fmt);
+  ['kp1','kp2','kp3'].forEach(id=>$(id).classList.add('grow'));
+  await wait(700); $('tr1').classList.add('on');
+  await wait(500);
+  ['b1','b2','b3','b4','b5','b6'].forEach((id,i)=>setTimeout(()=>$(id).classList.add('up'),i*120));
+  await wait(1800);
+  capOff(); hideDevice(); await wait(600);
+}
+
+async function sceneCommerceSale(){
+  setDevice('commerce');
+  $('devbody').innerHTML=`
+    <div style="font-family:'Cormorant',serif;font-size:24px;font-weight:700;color:var(--vert);margin-bottom:2px">Nouvelle vente</div>
+    <div style="font-size:13px;color:var(--brume);margin-bottom:16px">Ma Boutique — Dakar</div>
+    <div id="sale-lines">
+      <div class="rowline" id="sl1"><span>Sac de riz 25 kg × 4</span><b>60 000</b></div>
+      <div class="rowline" id="sl2"><span>Huile 5 L × 2</span><b>18 000</b></div>
+      <div class="rowline" id="sl3"><span>Lait en poudre × 6 <span class="tag">stock ✓</span></span><b>21 000</b></div>
+    </div>
+    <div class="totbox">
+      <div class="r"><span>Total HT</span><b>99 000</b></div>
+      <div class="r"><span>TVA 18 %</span><b>17 820</b></div>
+      <div class="r big c" id="sale-tot"><span>Total TTC</span><b>116 820 F</b></div>
+    </div>
+    <div style="margin-top:16px;text-align:right"><span class="simbtn green" id="sale-btn">Valider &amp; facturer</span></div>`;
+  showDevice(); await wait(400);
+  caption("Enregistrez une vente en direct","Produits, stock et TVA calculés tout seuls");
+  await wait(500);
+  $('sl1').classList.add('on'); await wait(350);
+  $('sl2').classList.add('on'); await wait(350);
+  $('sl3').classList.add('on'); await wait(500);
+  $('sale-tot').classList.add('show'); await wait(600);
+  // curseur clique sur le bouton
+  await clickAt(1015,566);
+  $('sale-btn').classList.add('press'); await wait(200); $('sale-btn').classList.remove('press');
+  toast('Facture générée ✓',true);
+  await wait(500);
+  notif('','Facture #2043 créée','116 820 F · Ma Boutique','doc');
+  await wait(1600); toastOff(); notifOff();
+  await wait(400); capOff(); hideDevice(); await wait(600);
+}
+
+async function sceneServices(){
+  setDevice('services');
+  $('devbody').innerHTML=`
+    <div style="font-family:'Cormorant',serif;font-size:24px;font-weight:700;color:#9A4E3B;margin-bottom:2px">Refonte de marque</div>
+    <div style="font-size:13px;color:var(--brume);margin-bottom:8px">Client : Atelier Plus</div>
+    <div class="pillrow">
+      <div class="pill from">Devis — 500 000 F</div>
+      <div class="arrow" id="s-arrow">→</div>
+      <div class="pill to" id="s-topill">Facture d'acompte</div>
+    </div>
+    <div class="totbox" style="width:64%">
+      <div class="r"><span>Total prestation</span><b>500 000</b></div>
+      <div class="r"><span>Acompte (30 %)</span><b>150 000</b></div>
+      <div class="r big s" id="s-tot"><span>À payer</span><b>150 000 F</b></div>
+    </div>
+    <div style="margin-top:14px;text-align:right"><span class="simbtn" id="s-btn">Convertir en facture</span></div>`;
+  showDevice(); await wait(400);
+  caption("Transformez un devis en facture","Édition Services — devis, acomptes, missions");
+  await wait(700);
+  // curseur clique sur "convertir"
+  await clickAt(1010,556);
+  $('s-btn').classList.add('press'); await wait(200); $('s-btn').classList.remove('press');
+  $('s-arrow').classList.add('on'); await wait(300);
+  $('s-topill').classList.add('on'); await wait(400);
+  $('s-tot').classList.add('show');
+  toast('Acompte enregistré ✓',true);
+  await wait(500);
+  notif('copper','Acompte reçu','150 000 F · Atelier Plus','cash');
+  await wait(1700); toastOff(); notifOff();
+  await wait(400); capOff(); hideDevice(); await wait(600);
+}
+
+async function sceneBusiness(){
+  setDevice('commerce');
+  $('devbody').innerHTML=`
+    <div class="bizwrap">
+      <div class="bizcol c" id="bz-c"><h4>Boutique Sagna</h4><div class="sub">Commerce · Dakar</div><div class="mini">Ventes · Stocks · Caisse</div></div>
+      <div class="switchbtn" id="bz-sw">⇄</div>
+      <div class="bizcol s dim" id="bz-s"><h4>Cabinet Sagna</h4><div class="sub">Services · Conseil</div><div class="mini">Devis · Missions · Acomptes</div></div>
+    </div>
+    <div style="text-align:center;margin-top:20px;font-size:15px;color:var(--brume)">Un seul compte — deux entreprises</div>
+    <div style="text-align:center;margin-top:14px"><span class="simbtn" id="bz-btn">⇄ Changer d'entreprise</span></div>`;
+  showDevice(); await wait(400);
+  caption("Deux entreprises, un seul compte","Édition Business — bascule en un clic");
+  await wait(900);
+  // curseur clique sur le bouton bascule
+  await clickAt(760,556);
+  $('bz-btn').classList.add('press'); await wait(180); $('bz-btn').classList.remove('press');
+  $('bz-sw').classList.add('spin');
+  toast('⇄ Espace Services',true);
+  $('bz-c').classList.add('dim'); $('bz-s').classList.remove('dim');
+  setDevice('services');
+  await wait(1500); toastOff();
+  // rebascule
+  await clickAt(760,556);
+  $('bz-btn').classList.add('press'); await wait(180); $('bz-btn').classList.remove('press');
+  $('bz-sw').classList.remove('spin');
+  toast('⇄ Espace Commerce',true);
+  $('bz-s').classList.add('dim'); $('bz-c').classList.remove('dim');
+  setDevice('commerce');
+  await wait(1400); toastOff();
+  await wait(300); capOff(); hideDevice(); await wait(600);
+}
+
+async function sceneElec(){
+  setDevice('commerce');
+  $('devbody').innerHTML=`
+    <div style="font-family:'Cormorant',serif;font-size:24px;font-weight:700;color:var(--vert);margin-bottom:2px">Appareils &amp; téléphonie</div>
+    <div style="font-size:13px;color:var(--brume);margin-bottom:16px">Suivi à l'unité · IMEI · échanges</div>
+    <div class="devgrid">
+      <div class="devcard" id="dc1"><div class="nm">iPhone 13 — 128 Go</div><div class="imei">IMEI · 3548 8720 1145</div><div class="pr">380 000 F</div><span class="st stock">En stock</span></div>
+      <div class="devcard" id="dc2"><div class="nm">Samsung A54</div><div class="imei">IMEI · 3611 0492 7730</div><div class="pr">245 000 F</div><span class="st sold">Vendu ✓</span></div>
+      <div class="devcard" id="dc3"><div class="nm">Tecno Camon 20</div><div class="imei">IMEI · 3599 2210 8846</div><div class="pr">165 000 F</div><span class="st stock">En stock</span></div>
+      <div class="devcard" id="dc4"><div class="nm">Reprise — Redmi 10</div><div class="imei">Échange · +90 000 F</div><div class="pr">90 000 F</div><span class="st sold">Complément</span></div>
+    </div>`;
+  showDevice(); await wait(400);
+  caption("Module Électronique en option","Appareils à l'unité, IMEI, reprises et échanges");
+  await wait(500);
+  ['dc1','dc2','dc3','dc4'].forEach((id,i)=>setTimeout(()=>$(id).classList.add('on'),i*180));
+  await wait(1400);
+  notif('gold','Reprise enregistrée','Redmi 10 repris · complément 90 000 F','check');
+  await wait(1700); notifOff();
+  await wait(300); capOff(); hideDevice(); await wait(600);
+}
+
+async function sceneOutro(){
+  $('outro').classList.add('on'); await wait(3000);
+}
+
+function resetAll(){
+  ['intro','outro'].forEach(id=>$(id).classList.remove('on'));
+  hideDevice(); capOff(); toastOff(); notifOff();
+  moveCursor(640,360);
+  const pr=$('prog'); pr.style.transition='none'; pr.style.width='0'; void pr.offsetWidth;
+}
+
+async function runShow(){
+  const total=42000;
+  const pr=$('prog'); pr.style.transition='width '+total+'ms linear';
+  requestAnimationFrame(()=>{pr.style.width='100%';});
+  await sceneIntro();
+  await sceneCommerceDash();
+  await sceneCommerceSale();
+  await sceneServices();
+  await sceneBusiness();
+  await sceneElec();
+  await sceneOutro();
+}
+
+async function loop(){ while(true){ await runShow(); await wait(1000); resetAll(); await wait(500); } }
+
+if(AUTO){ window.addEventListener('load',()=>setTimeout(loop,400)); }
+else {
+  $('startbtn').classList.remove('hide');
+  $('startbtn').addEventListener('click',async()=>{ $('startbtn').classList.add('hide'); await wait(400); runShow(); });
+}
+</script>
+</body>
+</html>
